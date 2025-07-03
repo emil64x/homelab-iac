@@ -16,6 +16,8 @@ module "ubuntu_vm" {
   cloudflare_email         = var.cloudflare_email
   cloudflare_zone          = var.cloudflare_zone
   cloudflare_zone_id       = var.cloudflare_zone_id
+
+  portainer_admin_password = var.portainer_admin_password
 }
 
 

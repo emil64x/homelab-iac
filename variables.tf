@@ -77,3 +77,8 @@ variable "terraform_user_key" {
 variable "persistent_disk_path" {
   type = string  
 }
+
+variable "portainer_admin_password" {
+    type = string
+    sensitive = true
+}

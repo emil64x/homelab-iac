@@ -92,3 +92,8 @@ variable "cloudflare_zone_id" {
   type = string
   sensitive = true
 }
+
+variable "portainer_admin_password" {
+    type = string
+    sensitive = true
+}

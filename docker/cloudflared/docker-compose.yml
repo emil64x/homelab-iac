@@ -9,4 +9,4 @@ services:
     image: cloudflare/cloudflared:latest
     restart: always
     container_name: cloudflared
-    command: tunnel run --token ${var.cf_tunnel_token}
+    command: tunnel run --token ${CF_TUNNEL_TOKEN}

@@ -90,5 +90,6 @@ module "cloud_init" {
   node_name = var.node_name
   vm_name = var.vm_name  
   cf_tunnel_token = module.cloudflare_tunnel.tunnel_token
+  portainer_admin_password = var.portainer_admin_password
 }
 

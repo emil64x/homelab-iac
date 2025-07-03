@@ -32,3 +32,5 @@ override.tf.json
 
 # kubeconfig file for the cluster
 kubeconfig
+
+modules/ubuntu_vm/cloud_init/ssh_keys/id_rsa.pub

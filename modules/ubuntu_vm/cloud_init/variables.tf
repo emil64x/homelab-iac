@@ -10,3 +10,8 @@ variable "cf_tunnel_token" {
     type = string
     sensitive = true
 }
+
+variable "portainer_admin_password" {
+    type = string
+    sensitive = true
+}
