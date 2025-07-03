@@ -1,0 +1,12 @@
+services:
+  httpbin:
+    image: kennethreitz/httpbin
+    restart: always
+    container_name: httpbin
+    ports:
+      - "8080:80"
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: always
+    container_name: cloudflared
+    command: tunnel run --token ${var.cf_tunnel_token}
