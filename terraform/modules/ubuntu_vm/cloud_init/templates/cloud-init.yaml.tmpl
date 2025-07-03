@@ -28,7 +28,7 @@ write_files:
     content: |
       CF_TUNNEL_TOKEN=${cf_tunnel_token}
 
-  - path: /opt/portainer-git-stack.json
+  - path: /opt/stack-cloudflared.json
     permissions: '0644'
     content: |
       ${indent(6, stack_json)}
