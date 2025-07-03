@@ -26,23 +26,35 @@ JWT=$(curl -s -X POST http://localhost:9000/api/auth \
   -H "Content-Type: application/json" \
   -d '{"Username": "admin", "Password": "${portainer_password}"}' | jq -r '.jwt')
 
-ENDPOINT_ID=$(curl -s -H "Authorization: Bearer $JWT" http://localhost:9000/api/endpoints | jq '.[0].Id')
+echo "[+] Registering Docker environment..."
+# Check if endpoint already exists
+EXISTING_ENDPOINT=$(curl -s -H "Authorization: Bearer $JWT" http://localhost:9000/api/endpoints | jq '[.[] | select(.Name=="local")] | length')
 
-# Register the local Docker environment (Non-Swarm)
-curl -s -X POST http://localhost:9000/api/endpoints \
+if [ "$EXISTING_ENDPOINT" -eq 0 ]; then
+  curl -s -X POST http://localhost:9000/api/endpoints \
+    -H "Authorization: Bearer $JWT" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "Name": "local",
+      "EndpointType": 1,
+      "URL": "unix:///var/run/docker.sock",
+      "TLS": false
+    }'
+else
+  echo "[!] Docker endpoint 'local' already exists. Skipping registration."
+fi
+
+echo "[+] Looking up endpoint ID"
+ENDPOINT_ID=$(curl -s -H "Authorization: Bearer $JWT" http://localhost:9000/api/endpoints | jq '.[] | select(.Name=="local") | .Id')
+
+echo "[+] Registering Git stacks..."
+for STACKFILE in /opt/stack-*.json; do
+  echo "[+] Deploying stack from $STACKFILE"
+  curl -X POST "http://localhost:9000/api/stacks/create/standalone/repository?endpointId=$ENDPOINT_ID" \
   -H "Authorization: Bearer $JWT" \
   -H "Content-Type: application/json" \
-  -d '{
-    "Name": "local-docker",
-    "EndpointType": 1,
-    "URL": "unix:///var/run/docker.sock",
-    "TLS": false
-  }'
+  --data @"$STACKFILE"
+done
 
-echo "[+] Deploying stack: cloudflared"
-curl -s -X POST http://localhost:9000/api/stacks \
-  -H "Authorization: Bearer $JWT" \
-  -H "Content-Type: application/json" \
-  --data-binary @/opt/portainer-git-stack.json \
-  --data-urlencode "endpointId=$ENDPOINT_ID"
+echo "[✓] Bootstrap complete"
 

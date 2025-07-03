@@ -1,16 +1,18 @@
 {
-  "Name": "cloudflared",
-  "RepositoryURL": "https://github.com/emil64x/homelab-iac.git",
-  "ComposeFilePathInRepo": "docker/cloudflared/docker-compose.yml",
-  "Env": [
+  "name": "cloudflared",
+  "repositoryURL": "https://github.com/emil64x/homelab-iac.git",
+  "composeFile": "docker/cloudflared/docker-compose.yml",
+  "repositoryReferenceName": "refs/heads/main",
+  "env": [
     {
       "name": "CF_TUNNEL_TOKEN",
       "value": "${cf_tunnel_token}"
     }
   ],
-  "SwarmID": "",
-  "AutoUpdate": {
-    "Interval": "5m",
-    "Mechanism": "Interval"
-  }
+  "autoUpdate": {
+    "interval": "5m",
+    "mechanism": "Interval"
+  },
+  "fromAppTemplate": false,
+  "tlsskipVerify": false
 }
