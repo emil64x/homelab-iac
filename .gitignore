@@ -13,12 +13,12 @@ crash.log
 # version control.
 #
 # example.tfvars
-terraform.tfvars
+terraform/terraform.tfvars
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
-override.tf
-override.tf.json
+terraform/override.tf
+terraform/override.tf.json
 *_override.tf
 *_override.tf.json
 
@@ -33,4 +33,4 @@ override.tf.json
 # kubeconfig file for the cluster
 kubeconfig
 
-modules/ubuntu_vm/cloud_init/ssh_keys/id_rsa.pub
+terraform/modules/ubuntu_vm/cloud_init/ssh_keys/id_rsa.pub
