@@ -6,12 +6,16 @@ variable "vm_name" {
     type = string
 }
 
-variable "cf_tunnel_token" {
+variable "portainer_admin_password" {
     type = string
     sensitive = true
 }
 
-variable "portainer_admin_password" {
-    type = string
-    sensitive = true
+variable "enabled_stacks" {
+  type = list(object({
+    name = string
+    repo_url = string
+    path = string
+    env  = map(string)
+  }))
 }

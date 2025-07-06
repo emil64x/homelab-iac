@@ -4,6 +4,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
   name      = var.vm_name
   node_name = var.node_name
 
+  reboot_after_update = false
+
   cpu {
     cores = var.vm_cores
   }
@@ -89,7 +91,16 @@ module "cloud_init" {
 
   node_name = var.node_name
   vm_name = var.vm_name  
-  cf_tunnel_token = module.cloudflare_tunnel.tunnel_token
   portainer_admin_password = var.portainer_admin_password
+
+  enabled_stacks =  [
+      {
+        name = "cloudflared"
+        path = "docker/cloudflared/docker-compose.yml"
+        repo_url = "https://github.com/emil64x/homelab-iac.git"
+        env  = { CF_TUNNEL_TOKEN = module.cloudflare_tunnel.tunnel_token }
+      }
+    ]  
+  
 }
 
