@@ -18,6 +18,8 @@ module "ubuntu_vm" {
   cloudflare_zone_id       = var.cloudflare_zone_id
 
   portainer_admin_password = var.portainer_admin_password
+
+  enabled_stacks = [  ]
 }
 
 

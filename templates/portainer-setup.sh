@@ -31,21 +31,31 @@ echo "[+] Registering Docker environment..."
 EXISTING_ENDPOINT=$(curl -s -H "Authorization: Bearer $JWT" http://localhost:9000/api/endpoints | jq '[.[] | select(.Name=="local")] | length')
 
 if [ "$EXISTING_ENDPOINT" -eq 0 ]; then
-  curl -s -X POST http://localhost:9000/api/endpoints \
-    -H "Authorization: Bearer $JWT" \
-    -H "Content-Type: application/json" \
-    -d '{
-      "Name": "local",
-      "EndpointType": 1,
-      "URL": "unix:///var/run/docker.sock",
-      "TLS": false
-    }'
+  curl --location 'http://192.168.1.10:9000/api/endpoints' \
+  --header "Authorization: Bearer $JWT" \
+  --form 'Name="local"' \
+  --form 'EndpointCreationType="1"'
 else
   echo "[!] Docker endpoint 'local' already exists. Skipping registration."
 fi
 
-echo "[+] Looking up endpoint ID"
-ENDPOINT_ID=$(curl -s -H "Authorization: Bearer $JWT" http://localhost:9000/api/endpoints | jq '.[] | select(.Name=="local") | .Id')
+echo "[+] Waiting for Portainer to register the 'local' endpoint..."
+for i in {1..10}; do
+  ENDPOINT_ID=$(curl -s -H "Authorization: Bearer $JWT" http://localhost:9000/api/endpoints | jq -r '.[] | select(.Name=="local") | .Id')
+  if [[ -n "$ENDPOINT_ID" && "$ENDPOINT_ID" != "null" ]]; then
+    echo "[✓] Found local endpoint with ID: $ENDPOINT_ID"
+    break
+  fi
+  echo "    Still waiting... ($i)"
+  sleep 3
+done
+
+if [[ -z "$ENDPOINT_ID" || "$ENDPOINT_ID" == "null" ]]; then
+  echo "[✗] Failed to retrieve local endpoint ID. Exiting."
+  exit 1
+fi
+
+sleep 10
 
 echo "[+] Registering Git stacks..."
 for STACKFILE in /opt/stack-*.json; do

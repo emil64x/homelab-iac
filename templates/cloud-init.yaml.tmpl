@@ -22,17 +22,8 @@ mounts:
   - [ "/dev/sda", "/mnt/shared_storage", "ext4", "defaults", "0", "2" ]
 
 write_files:
-  - path: /opt/cloudflared/.env
-    permissions: '0600'
-    owner: root:root
-    content: |
-      CF_TUNNEL_TOKEN=${cf_tunnel_token}
 
-  - path: /opt/stack-cloudflared.json
-    permissions: '0644'
-    content: |
-      ${indent(6, stack_json)}
-
+  ${indent(2, rendered_stacks)}
   - path: /opt/bootstrap-portainer.sh
     permissions: '0755'
     content: |
