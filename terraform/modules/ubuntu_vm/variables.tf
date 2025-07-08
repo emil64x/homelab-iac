@@ -99,10 +99,10 @@ variable "portainer_admin_password" {
 }
 
 variable "enabled_stacks" {
-  type = list(object({
-    name = string
-    repo_url = string
-    path = string
-    env  = map(string)
-  }))
+  type = list(string)
+}
+
+
+variable "shared_storage_mountpoint" {
+  type = string
 }

@@ -19,7 +19,7 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
 
 mounts:
-  - [ "/dev/sda", "/mnt/shared_storage", "ext4", "defaults", "0", "2" ]
+  - [ "/dev/sda", "${shared_storage_mountpoint}", "ext4", "defaults", "0", "2" ]
 
 write_files:
 
@@ -35,12 +35,12 @@ runcmd:
   - |
         for i in {1..10}; do
           [ -b /dev/sda ] && break
-          echo "Waiting for /dev/sda..." && sleep 2
+          echo "Waiting for /dev/sda..." && sleep 10
         done
         fsck -f -y /dev/sda || true
-        mkdir /mnt/shared_storage
-        mount /dev/sda /mnt/shared_storage
-        TARGET_DIR="/mnt/shared_storage/${vm_name}"
+        mkdir "${shared_storage_mountpoint}"
+        mount /dev/sda "${shared_storage_mountpoint}"
+        TARGET_DIR="${shared_storage_mountpoint}/${vm_name}"
         if [ ! -d "$TARGET_DIR" ]; then
           echo "Creating directory $TARGET_DIR"
           mkdir -p "$TARGET_DIR"
