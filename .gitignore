@@ -33,4 +33,3 @@ terraform/override.tf.json
 # kubeconfig file for the cluster
 kubeconfig
 
-terraform/modules/ubuntu_vm/cloud_init/ssh_keys/id_rsa.pub
