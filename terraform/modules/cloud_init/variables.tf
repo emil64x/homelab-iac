@@ -17,5 +17,14 @@ variable "enabled_stacks" {
     repo_url = string
     path = string
     env  = map(string)
+    dns  = list(object({
+      local_url = string
+      dns_prefix = string
+    }))
   }))
+}
+
+
+variable "shared_storage_mountpoint" {
+  type = string
 }

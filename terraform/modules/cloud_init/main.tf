@@ -12,6 +12,7 @@ locals {
         ])
       })
     }
+    if s.path != null
   ]
 
   rendered_stacks_string = join("\n", [
@@ -44,6 +45,8 @@ data "template_file" "cloud_init" {
     rendered_stacks  = local.rendered_stacks_string
     portainer_script = data.template_file.portainer_script.rendered
     vm_name          = var.vm_name
+    
+    shared_storage_mountpoint = var.shared_storage_mountpoint
   }
 }
 

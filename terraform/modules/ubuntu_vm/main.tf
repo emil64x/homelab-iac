@@ -58,7 +58,11 @@ resource "null_resource" "add_ssh_known_host" {
   depends_on = [proxmox_virtual_environment_vm.ubuntu_vm]
 
   provisioner "local-exec" {
-    command = "ssh-keyscan -H ${proxmox_virtual_environment_vm.ubuntu_vm[0].ipv4_addresses[1][0]} >> ~/.ssh/known_hosts"
+    command = <<-EOT
+      IP=${proxmox_virtual_environment_vm.ubuntu_vm[0].ipv4_addresses[1][0]}
+      ssh-keygen -R "$IP" || true
+      ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts
+    EOT
   }
 
   triggers = {
@@ -74,6 +78,8 @@ resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
   url = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 }
 
+
+
 module "cloudflare_tunnel"{
   source = "./../cloudflare_tf"
 
@@ -83,24 +89,29 @@ module "cloudflare_tunnel"{
   cloudflare_email = var.cloudflare_email
   cloudflare_token = var.cloudflare_api_token
   tunnel_name = "pve-${var.vm_name}"
+
+  enabled_stacks = module.stack_configs.enabled_stacks_config
 }
 
 module "cloud_init" {
-  source = "./cloud_init"
+  source = "./../cloud_init"
   depends_on = [ module.cloudflare_tunnel ]
 
   node_name = var.node_name
   vm_name = var.vm_name  
   portainer_admin_password = var.portainer_admin_password
 
-  enabled_stacks =  [
-      {
-        name = "cloudflared"
-        path = "docker/cloudflared/docker-compose.yml"
-        repo_url = "https://github.com/emil64x/homelab-iac.git"
-        env  = { CF_TUNNEL_TOKEN = module.cloudflare_tunnel.tunnel_token }
-      }
-    ]  
+  shared_storage_mountpoint = var.shared_storage_mountpoint
+
+  enabled_stacks = module.stack_configs.enabled_stacks_config
+}
+
+module "stack_configs" {
+  source = "./../stack_configs"
   
+  vm_name = var.vm_name
+  cloudflare_tunnel_token = module.cloudflare_tunnel.tunnel_token
+  enabled_stacks = var.enabled_stacks  
+  shared_storage_mountpoint = var.shared_storage_mountpoint
 }
 

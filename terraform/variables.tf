@@ -79,6 +79,14 @@ variable "persistent_disk_path" {
 }
 
 variable "portainer_admin_password" {
-    type = string
-    sensitive = true
+  type = string
+  sensitive = true
+}
+
+variable "shared_storage_mountpoint" {
+  type = string
+}
+
+variable "enabled_stacks" {
+  type = list(string)  
 }
