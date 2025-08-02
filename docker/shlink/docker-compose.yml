@@ -1,0 +1,26 @@
+name: shlink
+
+services:
+  shlink_api:
+    image: shlinkio/shlink:stable
+    container_name: shlink_api
+    ports:
+      - "3100:3100"
+    environment:
+      DEFAULT_DOMAIN: s.emil64.cc
+      IS_HTTPS_ENABLED: true
+      GEOLITE_LICENSE_KEY: kjh23ljkbndskj345
+      INITIAL_API_KEY: "9be13db0-2ccf-4f25-ac4c-17121230035d"
+      PORT: 3100
+    restart: always
+    volumes:
+      - ${STORAGE}/shlink/data:/etc/shlink/data
+  shilink_web-client: 
+    image: shlinkio/shlink-web-client:stable
+    container_name: shilink_web_client
+    ports: 
+      - "3120:8080"
+    environment: 
+      SHLINK_SERVER_URL: "https://s.emil64.cc"
+      SHLINK_SERVER_API_KEY: "9be13db0-2ccf-4f25-ac4c-17121230035d"
+    restart: always
