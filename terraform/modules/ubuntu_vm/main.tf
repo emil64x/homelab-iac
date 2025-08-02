@@ -8,6 +8,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
 
   cpu {
     cores = var.vm_cores
+    type  = "x86-64-v2-AES"
   }
 
   memory {
@@ -60,7 +61,7 @@ resource "null_resource" "add_ssh_known_host" {
   provisioner "local-exec" {
     command = <<-EOT
       IP=${proxmox_virtual_environment_vm.ubuntu_vm[0].ipv4_addresses[1][0]}
-      ssh-keygen -R "$IP" || true
+      sed -i.bak "/^$IP[[:space:]]/d" ~/.ssh/known_hosts
       ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts
     EOT
   }
@@ -108,7 +109,7 @@ module "cloud_init" {
 
 module "stack_configs" {
   source = "./../stack_configs"
-  
+
   vm_name = var.vm_name
   cloudflare_tunnel_token = module.cloudflare_tunnel.tunnel_token
   enabled_stacks = var.enabled_stacks  

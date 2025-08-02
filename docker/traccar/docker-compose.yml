@@ -20,7 +20,7 @@ services:
       CONFIG_USE_ENVIRONMENT_VARIABLES: "true"
       DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
       DATABASE_URL: >-
-        jdbc:mysql://database:3306/traccar
+        jdbc:mysql://localhost:3306/traccar
         ?zeroDateTimeBehavior=round
         &serverTimezone=UTC
         &allowPublicKeyRetrieval=true
