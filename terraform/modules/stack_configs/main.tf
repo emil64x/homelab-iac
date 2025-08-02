@@ -37,6 +37,25 @@ locals {
         }
       ]
     }
+
+    shlink = {
+      name     = "shlink"
+      path     = "docker/shlink/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+          STORAGE = "${var.shared_storage_mountpoint}/${var.vm_name}"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:3100"
+          dns_prefix = "s"
+        },
+        {
+          local_url  = "http://172.17.0.1:3120"
+          dns_prefix = "shlink"
+        }
+      ]
+    }
   }
 
   enabled_stack_configs = [
