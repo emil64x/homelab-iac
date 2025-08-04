@@ -1,5 +1,9 @@
 name: traccar
 
+networks:
+  traccar_net:
+    driver: bridge
+
 services:
 
   database:
@@ -12,6 +16,8 @@ services:
       TIMESCALEDB_TELEMETRY: "off"
     volumes:
       - ${STORAGE}/traccar/data:/var/lib/postgresql/data
+    networks:
+      - traccar_net
 
   traccar:
     image: traccar/traccar:latest
@@ -34,3 +40,5 @@ services:
       - "8082:8082"
     volumes:
       - ${STORAGE}/traccar/logs:/opt/traccar/logs
+    networks:
+      - traccar_net
