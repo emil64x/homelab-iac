@@ -1,15 +1,23 @@
+name: traccar
+
+networks:
+  traccar_net:
+    driver: bridge
+
 services:
 
   database:
-    image: mysql:8.4
+    image: timescale/timescaledb:latest-pg16
     restart: unless-stopped
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-      MYSQL_DATABASE: traccar
-      MYSQL_USER: traccar
-      MYSQL_PASSWORD: traccar
+      POSTGRES_DB: traccar
+      POSTGRES_USER: traccar
+      POSTGRES_PASSWORD: traccar
+      TIMESCALEDB_TELEMETRY: "off"
     volumes:
-      - ${STORAGE}/traccar/data:/var/lib/mysql
+      - ${STORAGE}/traccar/data:/var/lib/postgresql/data
+    networks:
+      - traccar_net
 
   traccar:
     image: traccar/traccar:latest
@@ -18,28 +26,19 @@ services:
       - database
     environment:
       CONFIG_USE_ENVIRONMENT_VARIABLES: "true"
-      DATABASE_DRIVER: com.mysql.cj.jdbc.Driver
-      DATABASE_URL: >-
-        jdbc:mysql://localhost:3306/traccar
-        ?zeroDateTimeBehavior=round
-        &serverTimezone=UTC
-        &allowPublicKeyRetrieval=true
-        &useSSL=false
-        &allowMultiQueries=true
-        &autoReconnect=true
-        &useUnicode=yes
-        &characterEncoding=UTF-8
-        &sessionVariables=sql_mode=''
+      DATABASE_DRIVER: org.postgresql.Driver
+      DATABASE_URL: jdbc:postgresql://database:5432/traccar
       DATABASE_USER: traccar
       DATABASE_PASSWORD: traccar
     healthcheck:
-      test: [ "CMD", "curl", "-fsS", "http://localhost:8082/api/health" ]
+      test: [ "CMD", "wget", "-q", "--spider", "http://localhost:8082/api/health" ]
       interval: 2m
       timeout: 5s
       start_period: 1h
       retries: 3
     ports:
       - "8082:8082"
-      - "5000-5500:5000-5500"
     volumes:
       - ${STORAGE}/traccar/logs:/opt/traccar/logs
+    networks:
+      - traccar_net
