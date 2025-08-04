@@ -12,6 +12,7 @@ services:
       GEOLITE_LICENSE_KEY: kjh23ljkbndskj345
       INITIAL_API_KEY: "9be13db0-2ccf-4f25-ac4c-17121230035d"
       PORT: 3100
+      SHELL_VERBOSITY: 3
     restart: always
     volumes:
       - ${STORAGE}/shlink/data:/etc/shlink/data
