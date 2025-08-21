@@ -1,4 +1,4 @@
-provider proxmox {
+provider "proxmox" {
   endpoint = var.proxmox_endpoint
   insecure = var.proxmox_endpoint_insecure
   username = var.proxmox_user
