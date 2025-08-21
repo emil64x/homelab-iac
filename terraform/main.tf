@@ -1,10 +1,10 @@
 module "ubuntu_vm" {
-  source       = "./modules/ubuntu_vm"
+  source = "./modules/ubuntu_vm"
 
-  enable_vm    = var.enable_ubuntu_vm
-  vm_name      = var.ubuntu_vm_name
-  static_ip    = var.ubuntu_static_ip
-  
+  enable_vm = var.enable_ubuntu_vm
+  vm_name   = var.ubuntu_vm_name
+  static_ip = var.ubuntu_static_ip
+
   proxmox_host         = var.proxmox_host
   terraform_user       = var.terraform_user
   terraform_user_key   = var.terraform_user_key

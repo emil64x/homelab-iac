@@ -1,5 +1,5 @@
 variable "proxmox_user" {
-  type      = string
+  type = string
 }
 
 variable "proxmox_password" {
@@ -8,14 +8,14 @@ variable "proxmox_password" {
 }
 
 variable "proxmox_endpoint" {
-  type   = string
+  type = string
 }
 
 variable "proxmox_endpoint_insecure" {
-  type   = bool
+  type = bool
 }
 
-variable "proxmox_api_token"{
+variable "proxmox_api_token" {
   type = string
 }
 
@@ -25,11 +25,11 @@ variable "enable_ubuntu_vm" {
 }
 
 variable "ubuntu_vm_name" {
-  type    = string
+  type = string
 }
 
 variable "ubuntu_static_ip" {
-  type    = string
+  type = string
 }
 
 variable "cloudflare_api_token" {
@@ -47,17 +47,17 @@ variable "cloudflare_zone" {
 }
 
 variable "cloudflare_zone_id" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "cloudflare_tunnel_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "cloudflare_account_id" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -70,16 +70,16 @@ variable "terraform_user" {
 }
 
 variable "terraform_user_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "persistent_disk_path" {
-  type = string  
+  type = string
 }
 
 variable "portainer_admin_password" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -88,5 +88,5 @@ variable "shared_storage_mountpoint" {
 }
 
 variable "enabled_stacks" {
-  type = list(string)  
+  type = list(string)
 }
