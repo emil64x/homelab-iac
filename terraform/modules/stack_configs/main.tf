@@ -7,17 +7,17 @@ locals {
       env = {
         CF_TUNNEL_TOKEN = var.cloudflare_tunnel_token
       }
-      dns = [ ]
+      dns = []
     }
 
     portainer = {
       name     = "portainer"
-      path     = null                # This stack is not deployed via Git
+      path     = null # This stack is not deployed via Git
       repo_url = null
       env      = {}
       dns = [
         {
-          dns_prefix = "portainer-${var.vm_name}"
+          dns_prefix = "portainer-${var.dns_prefix}"
           local_url  = "http://172.17.0.1:9000"
         }
       ]
@@ -28,12 +28,12 @@ locals {
       path     = "docker/traccar/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-          STORAGE = "${var.shared_storage_mountpoint}/${var.vm_name}"
+        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
       }
       dns = [
         {
           local_url  = "http://172.17.0.1:8082"
-          dns_prefix = "traccar-${var.vm_name}"
+          dns_prefix = "traccar-${var.dns_prefix}"
         }
       ]
     }
@@ -43,7 +43,7 @@ locals {
       path     = "docker/shlink/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-          STORAGE = "${var.shared_storage_mountpoint}/${var.vm_name}"
+        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
       }
       dns = [
         {

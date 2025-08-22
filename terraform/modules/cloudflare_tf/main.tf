@@ -3,21 +3,21 @@ locals {
     for stack in var.enabled_stacks :
     [
       for route in stack.dns : {
-        fqdn  = "${route.dns_prefix}.${var.cloudflare_zone}"
-        name  = route.dns_prefix
+        fqdn = "${route.dns_prefix}.${var.cloudflare_zone}"
+        name = route.dns_prefix
       }
     ]
   ])
 }
 
 resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
-  account_id    = var.cloudflare_account_id
-  name          = var.tunnel_name
+  account_id = var.cloudflare_account_id
+  name       = var.tunnel_name
 }
 
 data "cloudflare_zero_trust_tunnel_cloudflared_token" "tunnel_token" {
-  account_id   = var.cloudflare_account_id
-  tunnel_id   = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
+  account_id = var.cloudflare_account_id
+  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
 }
 
 resource "cloudflare_dns_record" "routes" {

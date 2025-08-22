@@ -4,7 +4,7 @@ variable "enable_vm" {
 }
 
 variable "vm_name" {
-  type    = string
+  type = string
 }
 
 variable "node_name" {
@@ -32,7 +32,7 @@ variable "disk_interface" {
   default = "virtio0"
 }
 
-variable "persistent_disk_size"{
+variable "persistent_disk_size" {
   type    = string
   default = "50G"
 }
@@ -89,13 +89,13 @@ variable "cloudflare_zone" {
 }
 
 variable "cloudflare_zone_id" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "portainer_admin_password" {
-    type = string
-    sensitive = true
+  type      = string
+  sensitive = true
 }
 
 variable "enabled_stacks" {
@@ -104,5 +104,13 @@ variable "enabled_stacks" {
 
 
 variable "shared_storage_mountpoint" {
+  type = string
+}
+
+variable "shared_storage_folder" {
+  type = string
+}
+
+variable "dns_prefix" {
   type = string
 }

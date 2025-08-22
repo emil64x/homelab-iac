@@ -1,13 +1,13 @@
 locals {
   rendered_stacks = [
     for s in var.enabled_stacks : {
-      path = "/opt/stack-${s.name}.json"
+      path        = "/opt/stack-${s.name}.json"
       permissions = "0644"
       content = templatefile("${path.root}/../templates/portainer-stack.json.tmpl", {
         name         = s.name
         repo_url     = s.repo_url
         compose_path = s.path
-        env_block    = join(",", [
+        env_block = join(",", [
           for k, v in s.env : "{ \"name\": \"${k}\", \"value\": \"${v}\" }"
         ])
       })
@@ -16,7 +16,7 @@ locals {
   ]
 
   rendered_stacks_string = join("\n", [
-  for f in local.rendered_stacks : <<-EOT
+    for f in local.rendered_stacks : <<-EOT
   - path: ${f.path}
     permissions: '${f.permissions}'
     content: |
@@ -41,24 +41,25 @@ data "template_file" "portainer_script" {
 data "template_file" "cloud_init" {
   template = file("${path.root}/../templates/cloud-init.yaml.tmpl")
   vars = {
-    ssh_pub_key      = trimspace(data.local_file.ssh_public_key.content)
-    rendered_stacks  = local.rendered_stacks_string
-    portainer_script = data.template_file.portainer_script.rendered
-    vm_name          = var.vm_name
-    
+    ssh_pub_key           = trimspace(data.local_file.ssh_public_key.content)
+    rendered_stacks       = local.rendered_stacks_string
+    portainer_script      = data.template_file.portainer_script.rendered
+    vm_name               = var.vm_name
+    shared_storage_folder = var.shared_storage_folder
+
     shared_storage_mountpoint = var.shared_storage_mountpoint
   }
 }
 
 resource "proxmox_virtual_environment_file" "user_data_cloud_config" {
-  
+
   content_type = "snippets"
   datastore_id = "snippets"
   node_name    = var.node_name
   source_raw {
-    
+
     data = data.template_file.cloud_init.rendered
-  
+
     file_name = "user-data-cloud-config.yaml"
   }
 }

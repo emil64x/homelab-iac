@@ -5,6 +5,8 @@ module "ubuntu_vm" {
   vm_name   = var.ubuntu_vm_name
   static_ip = var.ubuntu_static_ip
 
+  dns_prefix = var.dns_prefix
+
   proxmox_host         = var.proxmox_host
   terraform_user       = var.terraform_user
   terraform_user_key   = var.terraform_user_key
@@ -18,10 +20,13 @@ module "ubuntu_vm" {
   cloudflare_zone_id       = var.cloudflare_zone_id
 
   shared_storage_mountpoint = var.shared_storage_mountpoint
+  shared_storage_folder     = var.shared_storage_folder
 
   portainer_admin_password = var.portainer_admin_password
 
   enabled_stacks = var.enabled_stacks
+
+
 }
 
 

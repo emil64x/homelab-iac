@@ -19,7 +19,7 @@ output "vm_ssh_command" {
 }
 
 output "cloudflare_metadata" {
-  value = module.cloudflare_tunnel.cloudflare_metadata
+  value       = module.cloudflare_tunnel.cloudflare_metadata
   description = "Cloudflare outputs"
 }
 

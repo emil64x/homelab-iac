@@ -90,3 +90,11 @@ variable "shared_storage_mountpoint" {
 variable "enabled_stacks" {
   type = list(string)
 }
+
+variable "dns_prefix" {
+  type = string
+}
+
+variable "shared_storage_folder" {
+  type = string
+}

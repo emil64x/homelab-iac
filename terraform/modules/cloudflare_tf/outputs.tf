@@ -4,9 +4,9 @@ output "tunnel_token" {
 
 output "cloudflare_metadata" {
   value = {
-    tunnel_id     = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
-    tunnel_name   = cloudflare_zero_trust_tunnel_cloudflared.tunnel.name
-    dns_records   = {
+    tunnel_id   = cloudflare_zero_trust_tunnel_cloudflared.tunnel.id
+    tunnel_name = cloudflare_zero_trust_tunnel_cloudflared.tunnel.name
+    dns_records = {
       for fqdn, record in cloudflare_dns_record.routes :
       fqdn => record.content
     }
