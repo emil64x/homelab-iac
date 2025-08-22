@@ -43,7 +43,7 @@ locals {
       path     = "docker/shlink/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        STORAGE        = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
         SHLINK_API_KEY = var.shlink_api_key
       }
       dns = [
@@ -63,8 +63,9 @@ locals {
       path     = "docker/claper/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
-        CLAPER_BASE_URL = "https://claper-${var.dns_prefix}"
+        STORAGE                = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        CLAPER_BASE_URL        = "https://claper-${var.dns_prefix}.${var.dns_suffix}"
+        CLAPER_SECRET_KEY_BASE = var.claper_secret_key_base
       }
       dns = [
         {

@@ -37,6 +37,7 @@ services:
       - BASE_URL=${CLAPER_BASE_URL}
       - PRESENTATION_STORAGE=local
       - PRESENTATION_STORAGE_DIR=/app/uploads
+      - SECRET_KEY_BASE=${CLAPER_SECRET_KEY_BASE}
     depends_on:
       db:
         condition: service_healthy

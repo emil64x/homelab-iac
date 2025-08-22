@@ -24,5 +24,15 @@ variable "shared_storage_folder" {
 }
 
 variable "shlink_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "dns_suffix" {
   type = string
+}
+
+variable "claper_secret_key_base" {
+  type      = string
+  sensitive = true
 }

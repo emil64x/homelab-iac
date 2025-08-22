@@ -116,5 +116,11 @@ variable "dns_prefix" {
 }
 
 variable "shlink_api_key" {
-  type = string
+  type      = string
+  sensitive = true
+}
+
+variable "claper_secret_key_base" {
+  type      = string
+  sensitive = true
 }
