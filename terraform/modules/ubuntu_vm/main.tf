@@ -60,11 +60,15 @@ resource "null_resource" "add_ssh_known_host" {
 
   provisioner "local-exec" {
     command = <<-EOT
+      set -e
       IP=${proxmox_virtual_environment_vm.ubuntu_vm[0].ipv4_addresses[1][0]}
-      sed -i.bak "/^$IP[[:space:]]/d" ~/.ssh/known_hosts
-      ssh-keyscan -H "$IP" >> ~/.ssh/known_hosts
+      ssh-keygen -R "$IP" 2>/dev/null || true
+      sed -i.bak "/^# $IP:22/d" ~/.ssh/known_hosts
+      ssh-keyscan -H "$IP" 2>/dev/null >> ~/.ssh/known_hosts || echo "Warning: ssh-keyscan failed for $IP"
+      sed -i.bak "/^# $IP:22/d" ~/.ssh/known_hosts
     EOT
-  }
+
+   }
 
   triggers = {
     always_run = timestamp()
