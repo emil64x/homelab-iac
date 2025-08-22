@@ -38,6 +38,7 @@ services:
       - PRESENTATION_STORAGE=local
       - PRESENTATION_STORAGE_DIR=/app/uploads
       - SECRET_KEY_BASE=${CLAPER_SECRET_KEY_BASE}
+      - DATABASE_URL=postgres://claper:claper@db:5432/claper
     depends_on:
       db:
         condition: service_healthy
