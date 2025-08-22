@@ -64,6 +64,7 @@ locals {
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
         STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        CLAPER_BASE_URL = "https://claper-${var.dns_prefix}"
       }
       dns = [
         {
