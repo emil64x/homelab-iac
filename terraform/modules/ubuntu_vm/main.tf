@@ -1,6 +1,6 @@
 resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
-  count     = var.enable_vm ? 1 : 0
-  
+  count = var.enable_vm ? 1 : 0
+
   name      = var.vm_name
   node_name = var.node_name
 
@@ -72,37 +72,38 @@ resource "null_resource" "add_ssh_known_host" {
 }
 
 resource "proxmox_virtual_environment_download_file" "ubuntu_cloud_image" {
-  content_type =  "iso"
-  datastore_id =  "local"
-  node_name    =  var.node_name
+  content_type = "iso"
+  datastore_id = "local"
+  node_name    = var.node_name
 
   url = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 }
 
 
 
-module "cloudflare_tunnel"{
+module "cloudflare_tunnel" {
   source = "./../cloudflare_tf"
 
-  cloudflare_zone = var.cloudflare_zone
-  cloudflare_zone_id = var.cloudflare_zone_id
+  cloudflare_zone       = var.cloudflare_zone
+  cloudflare_zone_id    = var.cloudflare_zone_id
   cloudflare_account_id = var.cloudflare_account_id
-  cloudflare_email = var.cloudflare_email
-  cloudflare_token = var.cloudflare_api_token
-  tunnel_name = "pve-${var.vm_name}"
+  cloudflare_email      = var.cloudflare_email
+  cloudflare_token      = var.cloudflare_api_token
+  tunnel_name           = "pve-${var.vm_name}"
 
   enabled_stacks = module.stack_configs.enabled_stacks_config
 }
 
 module "cloud_init" {
-  source = "./../cloud_init"
-  depends_on = [ module.cloudflare_tunnel ]
+  source     = "./../cloud_init"
+  depends_on = [module.cloudflare_tunnel]
 
-  node_name = var.node_name
-  vm_name = var.vm_name  
+  node_name                = var.node_name
+  vm_name                  = var.vm_name
   portainer_admin_password = var.portainer_admin_password
 
   shared_storage_mountpoint = var.shared_storage_mountpoint
+  shared_storage_folder     = var.shared_storage_folder
 
   enabled_stacks = module.stack_configs.enabled_stacks_config
 }
@@ -110,9 +111,11 @@ module "cloud_init" {
 module "stack_configs" {
   source = "./../stack_configs"
 
-  vm_name = var.vm_name
-  cloudflare_tunnel_token = module.cloudflare_tunnel.tunnel_token
-  enabled_stacks = var.enabled_stacks  
+  vm_name                   = var.vm_name
+  cloudflare_tunnel_token   = module.cloudflare_tunnel.tunnel_token
+  enabled_stacks            = var.enabled_stacks
   shared_storage_mountpoint = var.shared_storage_mountpoint
+  shared_storage_folder     = var.shared_storage_folder
+  dns_prefix                = var.dns_prefix
 }
 

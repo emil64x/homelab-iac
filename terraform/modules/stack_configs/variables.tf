@@ -1,5 +1,5 @@
 variable "vm_name" {
-  type    = string
+  type = string
 }
 
 variable "enabled_stacks" {
@@ -7,10 +7,18 @@ variable "enabled_stacks" {
 }
 
 variable "cloudflare_tunnel_token" {
-   type = string
-  sensitive = true  
+  type      = string
+  sensitive = true
 }
 
 variable "shared_storage_mountpoint" {
+  type = string
+}
+
+variable "dns_prefix" {
+  type = string
+}
+
+variable "shared_storage_folder" {
   type = string
 }
