@@ -121,5 +121,7 @@ module "stack_configs" {
   shared_storage_mountpoint = var.shared_storage_mountpoint
   shared_storage_folder     = var.shared_storage_folder
   dns_prefix                = var.dns_prefix
+
+  shlink_api_key = var.shlink_api_key
 }
 

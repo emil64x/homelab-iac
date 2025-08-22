@@ -26,6 +26,7 @@ module "ubuntu_vm" {
 
   enabled_stacks = var.enabled_stacks
 
+  shlink_api_key = var.shlink_api_key
 
 }
 

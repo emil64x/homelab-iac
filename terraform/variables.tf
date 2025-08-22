@@ -98,3 +98,7 @@ variable "dns_prefix" {
 variable "shared_storage_folder" {
   type = string
 }
+
+variable "shlink_api_key" {
+  type = string
+}

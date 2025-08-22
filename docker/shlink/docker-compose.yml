@@ -10,7 +10,7 @@ services:
       DEFAULT_DOMAIN: s.emil64.cc
       IS_HTTPS_ENABLED: true
       GEOLITE_LICENSE_KEY: kjh23ljkbndskj345
-      INITIAL_API_KEY: "9be13db0-2ccf-4f25-ac4c-17121230035d"
+      INITIAL_API_KEY: ${SHLINK_API_KEY}
       PORT: 3100
       SHELL_VERBOSITY: 3
     restart: always
@@ -23,5 +23,5 @@ services:
       - "3120:8080"
     environment: 
       SHLINK_SERVER_URL: "https://s.emil64.cc"
-      SHLINK_SERVER_API_KEY: "9be13db0-2ccf-4f25-ac4c-17121230035d"
+      SHLINK_SERVER_API_KEY: ${SHLINK_API_KEY}
     restart: always
