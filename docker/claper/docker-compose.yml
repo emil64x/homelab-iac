@@ -24,6 +24,9 @@ services:
       - claper-net
   app:
     image: ghcr.io/claperco/claper:latest # or build: .
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     ports:
       - 4000:4000
     volumes:

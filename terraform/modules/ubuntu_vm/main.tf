@@ -6,9 +6,11 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
 
   reboot_after_update = false
 
+  tags = var.tags
+
   cpu {
     cores = var.vm_cores
-    type  = "x86-64-v2-AES"
+    # type  = "x86-64-v2-AES"
   }
 
   memory {

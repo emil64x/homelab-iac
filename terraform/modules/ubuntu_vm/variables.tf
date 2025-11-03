@@ -124,3 +124,8 @@ variable "claper_secret_key_base" {
   type      = string
   sensitive = true
 }
+
+variable "tags" {
+  type    = list(string)
+  default = ["iac"]
+}
