@@ -70,11 +70,6 @@ variable "vw_pg_master_port_number" {
   default     = 5432
 }
 
-variable "vw_domain" {
-  description = "Domain name for Vaultwarden"
-  type        = string
-}
-
 variable "vw_admin_token" {
   description = "Admin token for Vaultwarden"
   type        = string

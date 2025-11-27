@@ -30,7 +30,6 @@ module "ubuntu_vm" {
   claper_secret_key_base = var.claper_secret_key_base
 
   vw_admin_token             = var.vw_admin_token
-  vw_domain                  = var.vw_domain
   vw_pg_master_host          = var.vw_pg_master_host
   vw_pg_master_port_number   = var.vw_pg_master_port_number
   vw_pg_replication_user     = var.vw_pg_replication_user
