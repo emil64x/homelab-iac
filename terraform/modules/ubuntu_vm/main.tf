@@ -22,6 +22,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
     interface    = var.disk_interface
     file_id      = proxmox_virtual_environment_download_file.ubuntu_cloud_image.id
     iothread     = true
+    size         = 20
     discard      = "on"
   }
 
