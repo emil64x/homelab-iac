@@ -25,7 +25,7 @@ services:
     restart: unless-stopped
     environment:
       DOMAIN: ${VW_DOMAIN}
-      DATABASE_URL: postgresql://${VW_PG_USER}:${VW_PG_PASSWORD}@postgres-replica:5432/vaultwarden
+      DATABASE_URL: postgresql://${VW_PG_USER}:${VW_PG_PASSWORD}@${VW_PG_MASTER_HOST}:${VW_PG_MASTER_PORT_NUMBER}/vaultwarden
       ADMIN_TOKEN: ${VW_ADMIN_TOKEN}
       SIGNUPS_ALLOWED: "false"
       SMTP_HOST: ${VW_SMTP_HOST}
