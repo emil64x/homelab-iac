@@ -129,3 +129,75 @@ variable "tags" {
   type    = list(string)
   default = ["iac"]
 }
+
+variable "vw_pg_user" {
+  description = "PostgreSQL application user for Vaultwarden"
+  type        = string
+}
+
+variable "vw_pg_password" {
+  description = "Password for the Vaultwarden PostgreSQL user"
+  type        = string
+  sensitive   = true
+}
+
+variable "vw_pg_replication_user" {
+  description = "Replication user for PostgreSQL replica"
+  type        = string
+}
+
+variable "vw_pg_replication_password" {
+  description = "Password for the PostgreSQL replication user"
+  type        = string
+  sensitive   = true
+}
+
+variable "vw_pg_master_host" {
+  description = "Hostname or IP of the PostgreSQL primary node"
+  type        = string
+}
+
+variable "vw_pg_master_port_number" {
+  description = "Port number of the PostgreSQL primary node"
+  type        = number
+  default     = 5432
+}
+
+variable "vw_domain" {
+  description = "Domain name for Vaultwarden"
+  type        = string
+}
+
+variable "vw_admin_token" {
+  description = "Admin token for Vaultwarden"
+  type        = string
+  sensitive   = true
+}
+
+variable "vw_smtp_host" {
+  description = "SMTP server hostname"
+  type        = string
+}
+
+variable "vw_smtp_port" {
+  description = "SMTP server port"
+  type        = number
+  default     = 587
+}
+
+variable "vw_smtp_security" {
+  description = "SMTP security mode (starttls, force_tls, off)"
+  type        = string
+  default     = "starttls"
+}
+
+variable "vw_smtp_user" {
+  description = "SMTP username"
+  type        = string
+}
+
+variable "vw_smtp_password" {
+  description = "SMTP password or app-specific password"
+  type        = string
+  sensitive   = true
+}
