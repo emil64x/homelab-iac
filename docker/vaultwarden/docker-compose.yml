@@ -40,7 +40,7 @@ services:
     ports:
       - "8200:80"
     depends_on:
-      - postgres-primary
+      - postgres-replica
     networks:
       - vaultnet
 
