@@ -140,5 +140,7 @@ module "stack_configs" {
   vw_smtp_port               = var.vw_smtp_port
   vw_smtp_user               = var.vw_smtp_user
   vw_smtp_password           = var.vw_smtp_password
+
+  shoutrrr_url = var.shoutrrr_url
 }
 

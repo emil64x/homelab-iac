@@ -196,3 +196,9 @@ variable "vw_smtp_password" {
   type        = string
   sensitive   = true
 }
+
+variable "shoutrrr_url" {
+  description = "Shoutrrr notification URL for Watchtower"
+  type        = string
+  sensitive   = true
+}

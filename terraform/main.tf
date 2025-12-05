@@ -42,6 +42,8 @@ module "ubuntu_vm" {
   vw_smtp_user               = var.vw_smtp_user
   vw_smtp_password           = var.vw_smtp_password
 
+  shoutrrr_url = var.shoutrrr_url
+
 }
 
 

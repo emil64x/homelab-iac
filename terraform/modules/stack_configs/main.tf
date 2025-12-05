@@ -109,6 +109,16 @@ locals {
       ]
     }
 
+    watchtower = {
+      name     = "watchtower"
+      path     = "docker/watchtower/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        WATCHTOWER_SHOUTRRR_URL = var.shoutrrr_url
+        HOSTNAME = var.vm_name
+      }
+    }
+
   }
 
   enabled_stack_configs = [
