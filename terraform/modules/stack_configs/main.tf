@@ -115,7 +115,7 @@ locals {
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
         SHOUTRRR_URL = var.shoutrrr_url
-        HOSTNAME = var.vm_name
+        HOSTNAME     = var.vm_name
       }
       dns = []
     }
