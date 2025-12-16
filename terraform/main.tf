@@ -44,6 +44,7 @@ module "ubuntu_vm" {
 
   shoutrrr_url = var.shoutrrr_url
 
+  silverbullet_user = var.silverbullet_user
 }
 
 

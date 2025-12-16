@@ -114,9 +114,27 @@ locals {
       path     = "docker/watchtower/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        WATCHTOWER_SHOUTRRR_URL = var.shoutrrr_url
+        SHOUTRRR_URL = var.shoutrrr_url
         HOSTNAME = var.vm_name
       }
+      dns = []
+    }
+
+    silverbullet = {
+      name     = "silverbullet"
+      path     = "docker/silverbullet/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        SILVERBULLET_USER = var.silverbullet_user
+
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:34309"
+          dns_prefix = "silverbullet-${var.dns_prefix}"
+        }
+      ]
     }
 
   }

@@ -181,3 +181,9 @@ variable "shoutrrr_url" {
   type        = string
   sensitive   = true
 }
+
+variable "silverbullet_user" {
+  description = "Silverbullet user credentials in the format username:password"
+  type        = string
+  sensitive   = true
+}

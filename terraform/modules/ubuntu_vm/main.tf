@@ -142,5 +142,7 @@ module "stack_configs" {
   vw_smtp_password           = var.vw_smtp_password
 
   shoutrrr_url = var.shoutrrr_url
+
+  silverbullet_user = var.silverbullet_user
 }
 
