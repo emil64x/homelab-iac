@@ -13,3 +13,6 @@ services:
     ports:
       - '8490:80'
     restart: unless-stopped
+  
+volumes:
+  linkstack_data:
