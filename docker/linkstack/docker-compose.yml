@@ -3,6 +3,7 @@ services:
   linkstack:
     hostname: 'linkstack'
     image: 'linkstackorg/linkstack:latest'
+    user: "1001:1001"
     environment:
       TZ: 'Europe/London'
       LOG_LEVEL: 'info'
