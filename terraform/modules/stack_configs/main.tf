@@ -137,24 +137,27 @@ locals {
       ]
     }
 
-  }
 
-  hedgedoc = {
+    hedgedoc = {
       name     = "hedgedoc"
       path     = "docker/hedgedoc/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
         STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
         HEDGEDOC_DOMAIN   = "https://hedgedoc-${var.dns_prefix}.${var.dns_suffix}"
-
+        HEDGEDOC_PORT     = "34409"
       }
       dns = [
         {
-          local_url  = "http://172.17.0.1:34309"
+          local_url  = "http://172.17.0.1:34409"
           dns_prefix = "hedgedoc-${var.dns_prefix}"
         }
       ]
+    }
+
   }
+
+  
   
 
   
