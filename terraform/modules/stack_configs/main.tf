@@ -139,6 +139,26 @@ locals {
 
   }
 
+  hedgedoc = {
+      name     = "hedgedoc"
+      path     = "docker/hedgedoc/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        HEDGEDOC_DOMAIN   = "https://hedgedoc-${var.dns_prefix}.${var.dns_suffix}"
+
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:34309"
+          dns_prefix = "hedgedoc-${var.dns_prefix}"
+        }
+      ]
+  }
+  
+
+  
+
   enabled_stack_configs = [
     for s in var.enabled_stacks : local.service_definitions[s]
     if contains(keys(local.service_definitions), s)
