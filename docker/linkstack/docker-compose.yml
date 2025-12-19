@@ -9,7 +9,7 @@ services:
       PHP_MEMORY_LIMIT: '256M'
       UPLOAD_MAX_FILESIZE: '8M'
     volumes:
-      - '${STORAGE}/linkstack_data:/htdocs'
+      - 'linkstack_data:/htdocs'
     ports:
       - '8490:80'
     restart: unless-stopped
