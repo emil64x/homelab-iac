@@ -13,5 +13,5 @@ services:
     volumes:
       - '${STORAGE}/linkstack_data:/htdocs'
     ports:
-      - '8490:443'
+      - '8490:80'
     restart: unless-stopped
