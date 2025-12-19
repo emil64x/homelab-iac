@@ -144,13 +144,30 @@ locals {
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
         STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
-        HEDGEDOC_DOMAIN   = "https://hedgedoc-${var.dns_prefix}.${var.dns_suffix}"
+        HEDGEDOC_DOMAIN   = "hedgedoc-${var.dns_prefix}.${var.dns_suffix}"
         HEDGEDOC_PORT     = "34409"
       }
       dns = [
         {
           local_url  = "http://172.17.0.1:34409"
           dns_prefix = "hedgedoc-${var.dns_prefix}"
+        }
+      ]
+    }
+
+    linkstack = {
+      name     = "linkstack"
+      path     = "docker/linkstack/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        LINKSTACK_ADMIN_EMAIL = var.linkstack_admin_email
+        LINKSTACK_DOMAIN   = "https://linkstack-${var.dns_prefix}.${var.dns_suffix}"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:8490"
+          dns_prefix = "linkstack-${var.dns_prefix}"
         }
       ]
     }

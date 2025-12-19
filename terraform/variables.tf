@@ -187,3 +187,9 @@ variable "silverbullet_user" {
   type        = string
   sensitive   = true
 }
+
+variable "linkstack_admin_email" {
+  description = "Admin email for Linkstack"
+  type        = string
+  default = ""
+}

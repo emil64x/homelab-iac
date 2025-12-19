@@ -45,6 +45,8 @@ module "ubuntu_vm" {
   shoutrrr_url = var.shoutrrr_url
 
   silverbullet_user = var.silverbullet_user
+
+  linkstack_admin_email = var.linkstack_admin_email
 }
 
 
