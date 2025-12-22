@@ -9,7 +9,15 @@ services:
       PHP_MEMORY_LIMIT: '256M'
       UPLOAD_MAX_FILESIZE: '8M'
     volumes:
-      - '${STORAGE}/linkstack:/htdocs'
+      - 'linkstack:/htdocs'
     ports:
       - '8490:80'
     restart: unless-stopped
+
+volumes:
+  linkstack:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${STORAGE}/linkstack
