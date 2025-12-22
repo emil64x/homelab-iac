@@ -8,6 +8,7 @@ services:
       - LOG_LEVEL=debug
       - PHP_MEMORY_LIMIT='256M'
       - UPLOAD_MAX_FILESIZE='8M'
+      - HTTPS_SERVER_NAME='${LINKSTACK_DOMAIN}'
     volumes:
       - '${STORAGE}/linkstack:/htdocs'
     ports:
