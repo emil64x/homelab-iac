@@ -15,7 +15,9 @@ services:
     environment:
       - CMD_DB_URL=postgres://hedgedoc:password@database:5432/hedgedoc
       - CMD_DOMAIN=${HEDGEDOC_DOMAIN}
-      - CMD_URL_ADDPORT=true
+      - CMD_PROTOCOL_USESSL=true
+      - CMD_URL_ADDPORT=false
+      - CMD_ALLOW_ORIGIN=['${HEDGEDOC_DOMAIN}']
     volumes:
       - ${STORAGE}/uploads:/hedgedoc/public/uploads
     ports:
