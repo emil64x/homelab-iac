@@ -29,6 +29,24 @@ module "ubuntu_vm" {
   shlink_api_key         = var.shlink_api_key
   claper_secret_key_base = var.claper_secret_key_base
 
+  vw_admin_token             = var.vw_admin_token
+  vw_pg_master_host          = var.vw_pg_master_host
+  vw_pg_master_port_number   = var.vw_pg_master_port_number
+  vw_pg_replication_user     = var.vw_pg_replication_user
+  vw_pg_replication_password = var.vw_pg_replication_password
+  vw_pg_user                 = var.vw_pg_user
+  vw_pg_password             = var.vw_pg_password
+  vw_smtp_host               = var.vw_smtp_host
+  vw_smtp_security           = var.vw_smtp_security
+  vw_smtp_port               = var.vw_smtp_port
+  vw_smtp_user               = var.vw_smtp_user
+  vw_smtp_password           = var.vw_smtp_password
+
+  shoutrrr_url = var.shoutrrr_url
+
+  silverbullet_user = var.silverbullet_user
+
+  linkstack_admin_email = var.linkstack_admin_email
 }
 
 

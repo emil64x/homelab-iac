@@ -1,0 +1,10 @@
+services:
+  silverbullet:
+    image: ghcr.io/silverbulletmd/silverbullet
+    restart: unless-stopped
+    environment:
+    - SB_USER=${SILVERBULLET_USER}
+    volumes:
+      - ${STORAGE}/space:/space
+    ports:
+      - 34309:3000

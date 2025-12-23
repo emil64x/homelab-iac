@@ -75,7 +75,109 @@ locals {
       ]
     }
 
+    vaultwarden = {
+      name     = "vaultwarden"
+      path     = "docker/vaultwarden/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+
+        # PostgreSQL settings
+        VW_PG_USER                 = var.vw_pg_user
+        VW_PG_PASSWORD             = var.vw_pg_password
+        VW_PG_REPLICATION_USER     = var.vw_pg_replication_user
+        VW_PG_REPLICATION_PASSWORD = var.vw_pg_replication_password
+        VW_PG_MASTER_HOST          = var.vw_pg_master_host
+        VW_PG_MASTER_PORT_NUMBER   = var.vw_pg_master_port_number
+
+        # Vaultwarden admin
+        VW_ADMIN_TOKEN = var.vw_admin_token
+        VW_DOMAIN      = "https://vaultwarden-replica.${var.dns_suffix}"
+
+        # SMTP settings
+        VW_SMTP_HOST     = var.vw_smtp_host
+        VW_SMTP_PORT     = var.vw_smtp_port
+        VW_SMTP_SECURITY = var.vw_smtp_security
+        VW_SMTP_USER     = var.vw_smtp_user
+        VW_SMTP_PASSWORD = var.vw_smtp_password
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:8200"
+          dns_prefix = "vaultwarden-replica"
+        }
+      ]
+    }
+
+    watchtower = {
+      name     = "watchtower"
+      path     = "docker/watchtower/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        SHOUTRRR_URL = var.shoutrrr_url
+        HOSTNAME     = var.vm_name
+      }
+      dns = []
+    }
+
+    silverbullet = {
+      name     = "silverbullet"
+      path     = "docker/silverbullet/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        SILVERBULLET_USER = var.silverbullet_user
+
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:34309"
+          dns_prefix = "silverbullet-${var.dns_prefix}"
+        }
+      ]
+    }
+
+
+    hedgedoc = {
+      name     = "hedgedoc"
+      path     = "docker/hedgedoc/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        HEDGEDOC_DOMAIN   = "hedgedoc-${var.dns_prefix}.${var.dns_suffix}"
+        HEDGEDOC_PORT     = "34409"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:34409"
+          dns_prefix = "hedgedoc-${var.dns_prefix}"
+        }
+      ]
+    }
+
+    linkstack = {
+      name     = "linkstack"
+      path     = "docker/linkstack/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        LINKSTACK_ADMIN_EMAIL = var.linkstack_admin_email
+        LINKSTACK_DOMAIN   = "https://linkstack-${var.dns_prefix}.${var.dns_suffix}"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:8490"
+          dns_prefix = "linkstack-${var.dns_prefix}"
+        }
+      ]
+    }
+
   }
+
+  
+  
+
+  
 
   enabled_stack_configs = [
     for s in var.enabled_stacks : local.service_definitions[s]

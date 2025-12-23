@@ -1,0 +1,44 @@
+services:
+  watchtower:
+    image: nickfedor/watchtower:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --schedule "0 0 5 * * *"
+    environment:
+      WATCHTOWER_NOTIFICATIONS: shoutrrr
+      WATCHTOWER_NOTIFICATION_URL: ${SHOUTRRR_URL}
+      WATCHTOWER_NOTIFICATION_REPORT: "true"
+      WATCHTOWER_NOTIFICATION_EMAIL_SUBJECTTAG: "homelab-2 - ${HOSTNAME}"
+      WATCHTOWER_NOTIFICATION_TEMPLATE: |
+        {{- if .Report }}
+        <html>
+        <body style="font-family:Arial,sans-serif;">
+          <h2>🚀 Watchtower Report</h2>
+          <p>{{len .Report.Scanned}} scanned, {{len .Report.Updated}} updated, {{len .Report.Failed}} failed</p>
+          <ul>
+          {{- range .Report.Updated}}
+            <li><b>{{.Name}}</b> ({{.ImageName}}): updated from {{.CurrentImageID.ShortID}} → {{.LatestImageID.ShortID}}</li>
+          {{- end}}
+          {{- range .Report.Fresh}}
+            <li><b>{{.Name}}</b> ({{.ImageName}}): {{.State}}</li>
+          {{- end}}
+          {{- range .Report.Failed}}
+            <li><b>{{.Name}}</b> ({{.ImageName}}): failed — {{.Error}}</li>
+          {{- end}}
+          </ul>
+          <h3>Logs</h3>
+          <pre>
+          {{range .Entries}}{{.Time.Format "2006-01-02 15:04:05"}} [{{.Level}}] {{.Message}}{{"\n"}}{{end}}
+          </pre>
+        </body></html>
+        {{- else }}
+        <html>
+        <body style="font-family:Arial,sans-serif;">
+          <h2>🚀 Watchtower Startup</h2>
+          <p>No report yet — Watchtower has just started and scheduled its next run.</p>
+          <pre>
+          {{range .Entries}}{{.Time.Format "2006-01-02 15:04:05"}} [{{.Level}}] {{.Message}}{{"\n"}}{{end}}
+          </pre>
+        </body></html>
+        {{- end }}
