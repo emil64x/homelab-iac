@@ -172,6 +172,22 @@ locals {
       ]
     }
 
+    mealie = {
+      name     = "mealie"
+      path     = "docker/mealie/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        MEALIE_DNS        = "https://mealie-${var.dns_prefix}.${var.dns_suffix}"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:9925"
+          dns_prefix = "mealie-${var.dns_prefix}"
+        }
+      ]
+    }
+
   }
 
   
