@@ -7,17 +7,22 @@ networks:
 services:
 
   database:
-    image: timescale/timescaledb:latest-pg16
+    image: postgres:16-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: traccar
       POSTGRES_USER: traccar
       POSTGRES_PASSWORD: traccar
-      TIMESCALEDB_TELEMETRY: "off"
     volumes:
       - ${STORAGE}/traccar/data:/var/lib/postgresql/data
     networks:
       - traccar_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-traccar} -d ${POSTGRES_DB:-traccar}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
 
   traccar:
     image: traccar/traccar:latest
