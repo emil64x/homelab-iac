@@ -188,6 +188,22 @@ locals {
       ]
     }
 
+    radicale = {
+      name     = "radicale"
+      path     = "docker/radicale/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        RADICALE_DNS        = "https://radicale-${var.dns_prefix}.${var.dns_suffix}"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:5232"
+          dns_prefix = "radicale-${var.dns_prefix}"
+        }
+      ]
+    }
+
   }
 
   
