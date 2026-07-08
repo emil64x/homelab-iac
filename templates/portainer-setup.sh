@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+PW_FILE="/opt/portainer/admin_password_plain"
+
 echo "[+] Creating Portainer volume"
 docker volume create portainer_data
 
@@ -12,19 +14,19 @@ docker run -d \
   --restart=always \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v portainer_data:/data \
-  portainer/portainer-ce
+  -v /opt/portainer:/tmp/portainer:ro \
+  portainer/portainer-ce \
+  --admin-password-file "/tmp/portainer/admin_password_plain"
 
 echo "[+] Waiting for Portainer API..."
-until curl -s http://localhost:9000/api/status; do sleep 3; done
+until curl -s http://localhost:9000/api/status > /dev/null; do sleep 1; done
 
-echo "[+] Setting up Portainer admin user"
-curl -X POST http://localhost:9000/api/users/admin/init \
-  -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "${portainer_password}"}'
-
+echo "[+] Authenticating"
 JWT=$(curl -s -X POST http://localhost:9000/api/auth \
   -H "Content-Type: application/json" \
   -d '{"Username": "admin", "Password": "${portainer_password}"}' | jq -r '.jwt')
+
+
 
 echo "[+] Registering Docker environment..."
 # Check if endpoint already exists
