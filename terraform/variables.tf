@@ -28,6 +28,16 @@ variable "ubuntu_vm_name" {
   type = string
 }
 
+variable "vm_cores" {
+  type    = number
+  default = 6
+}
+
+variable "vm_memory" {
+  type    = number
+  default = 16384
+}
+
 variable "ubuntu_static_ip" {
   type = string
 }
@@ -192,4 +202,86 @@ variable "linkstack_admin_email" {
   description = "Admin email for Linkstack"
   type        = string
   default = ""
+}
+
+variable "actual_password" {
+  description = "Password for Actual Budget"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "actual_budget_id" {
+  description = "Sync ID for Actual Budget"
+  type        = string
+  default     = ""
+}
+
+variable "google_generative_ai_api_key" {
+  description = "Google Gemini API key for Actual AI"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "homepage_allowed_hosts" {
+  description = "Allowed hosts for Homepage"
+  type        = string
+  default     = "emil64.cc"
+}
+
+variable "formbricks_nextauth_secret" {
+  description = "NextAuth secret for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "formbricks_encryption_key" {
+  description = "Encryption key for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "formbricks_cron_secret" {
+  description = "Cron secret for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "formbricks_hub_api_key" {
+  description = "Hub API key for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "formbricks_cubejs_api_secret" {
+  description = "CubeJS API secret for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "formbricks_smtp_password" {
+  description = "SMTP password for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "authentik_secret_key" {
+  description = "Secret key for Authentik"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "authentik_pg_pass" {
+  description = "PostgreSQL password for Authentik"
+  type        = string
+  sensitive   = true
+  default     = ""
 }

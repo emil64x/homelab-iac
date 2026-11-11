@@ -153,5 +153,22 @@ module "stack_configs" {
   silverbullet_user = var.silverbullet_user
 
   linkstack_admin_email = var.linkstack_admin_email
+
+  actual_password              = var.actual_password
+  actual_budget_id             = var.actual_budget_id
+  google_generative_ai_api_key = var.google_generative_ai_api_key
+
+  homepage_allowed_hosts = var.homepage_allowed_hosts
+
+  formbricks_nextauth_secret   = var.formbricks_nextauth_secret
+  formbricks_encryption_key    = var.formbricks_encryption_key
+  formbricks_cron_secret       = var.formbricks_cron_secret
+  formbricks_hub_api_key       = var.formbricks_hub_api_key
+  formbricks_cubejs_api_secret = var.formbricks_cubejs_api_secret
+  formbricks_smtp_password     = var.formbricks_smtp_password
+
+  authentik_secret_key = var.authentik_secret_key
+  authentik_pg_pass    = var.authentik_pg_pass
 }
+
 

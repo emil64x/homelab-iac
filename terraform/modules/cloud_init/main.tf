@@ -8,7 +8,7 @@ locals {
         repo_url     = s.repo_url
         compose_path = s.path
         env_block = join(",", [
-          for k, v in s.env : "{ \"name\": \"${k}\", \"value\": \"${v}\" }"
+          for k, v in s.env : jsonencode({ name = k, value = tostring(v) })
         ])
       })
     }

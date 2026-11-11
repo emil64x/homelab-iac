@@ -1,0 +1,14 @@
+services:
+  actual-ai:
+    image: docker.io/sakowicz/actual-ai:latest
+    container_name: actual-ai
+    restart: unless-stopped
+    environment:
+      ACTUAL_SERVER_URL: ${ACTUAL_SERVER_URL}
+      ACTUAL_PASSWORD: ${ACTUAL_PASSWORD}
+      ACTUAL_BUDGET_ID: ${ACTUAL_BUDGET_ID}
+      CLASSIFICATION_SCHEDULE_CRON: "0 */4 * * *"
+      LLM_PROVIDER: "google-generative-ai"
+      FEATURES: '["classifyOnStartup", "syncAccountsBeforeClassify", "rerunMissedTransactions", "freeWebSearch", "suggestNewCategories"]'
+      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY}
+      GOOGLE_GENERATIVE_AI_MODEL: "gemini-3.5-flash-lite"

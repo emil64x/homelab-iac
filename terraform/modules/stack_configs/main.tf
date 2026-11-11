@@ -204,6 +204,106 @@ locals {
       ]
     }
 
+    uptime-kuma = {
+      name     = "uptime-kuma"
+      path     = "docker/uptime-kuma/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:3001"
+          dns_prefix = "kuma-${var.dns_prefix}"
+        }
+      ]
+    }
+
+    actual-budget = {
+      name     = "actual-budget"
+      path     = "docker/actual-budget/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:5006"
+          dns_prefix = "actual-${var.dns_prefix}"
+        }
+      ]
+    }
+
+    actual-ai = {
+      name     = "actual-ai"
+      path     = "docker/actual-ai/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        ACTUAL_SERVER_URL            = "https://actual-${var.dns_prefix}.${var.dns_suffix}"
+        ACTUAL_PASSWORD              = var.actual_password
+        ACTUAL_BUDGET_ID             = var.actual_budget_id
+        GOOGLE_GENERATIVE_AI_API_KEY = var.google_generative_ai_api_key
+      }
+      dns = []
+    }
+
+    homepage = {
+      name     = "homepage"
+      path     = "docker/homepage/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE                = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        HOMEPAGE_ALLOWED_HOSTS = var.homepage_allowed_hosts
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:3200"
+          dns_prefix = "home-${var.dns_prefix}"
+        }
+      ]
+    }
+
+    formbricks = {
+      name     = "formbricks"
+      path     = "docker/formbricks/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        WEBAPP_URL        = "https://forms-${var.dns_prefix}.${var.dns_suffix}"
+        NEXTAUTH_URL      = "https://forms-${var.dns_prefix}.${var.dns_suffix}"
+        NEXTAUTH_SECRET   = var.formbricks_nextauth_secret
+        ENCRYPTION_KEY    = var.formbricks_encryption_key
+        CRON_SECRET       = var.formbricks_cron_secret
+        HUB_API_KEY       = var.formbricks_hub_api_key
+        CUBEJS_API_SECRET = var.formbricks_cubejs_api_secret
+        SMTP_PASSWORD     = var.formbricks_smtp_password
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:3233"
+          dns_prefix = "forms-${var.dns_prefix}"
+        }
+      ]
+    }
+
+    authentik = {
+      name     = "authentik"
+      path     = "docker/authentik/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE              = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        AUTHENTIK_SECRET_KEY = var.authentik_secret_key
+        PG_PASS              = var.authentik_pg_pass
+      }
+      dns = [
+        {
+          local_url  = "http://172.17.0.1:9010"
+          dns_prefix = "auth-${var.dns_prefix}"
+        }
+      ]
+    }
+
+
   }
 
   
