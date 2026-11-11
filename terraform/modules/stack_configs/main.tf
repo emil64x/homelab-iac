@@ -276,6 +276,10 @@ locals {
         CRON_SECRET       = var.formbricks_cron_secret
         HUB_API_KEY       = var.formbricks_hub_api_key
         CUBEJS_API_SECRET = var.formbricks_cubejs_api_secret
+        MAIL_FROM         = var.formbricks_mail_from
+        SMTP_HOST         = var.formbricks_smtp_host
+        SMTP_PORT         = tostring(var.formbricks_smtp_port)
+        SMTP_USER         = var.formbricks_smtp_user
         SMTP_PASSWORD     = var.formbricks_smtp_password
       }
       dns = [

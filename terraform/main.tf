@@ -61,6 +61,10 @@ module "ubuntu_vm" {
   formbricks_cron_secret       = var.formbricks_cron_secret
   formbricks_hub_api_key       = var.formbricks_hub_api_key
   formbricks_cubejs_api_secret = var.formbricks_cubejs_api_secret
+  formbricks_mail_from         = var.formbricks_mail_from
+  formbricks_smtp_host         = var.formbricks_smtp_host
+  formbricks_smtp_port         = var.formbricks_smtp_port
+  formbricks_smtp_user         = var.formbricks_smtp_user
   formbricks_smtp_password     = var.formbricks_smtp_password
 
   authentik_secret_key = var.authentik_secret_key

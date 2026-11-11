@@ -265,6 +265,32 @@ variable "formbricks_cubejs_api_secret" {
   default     = ""
 }
 
+variable "formbricks_mail_from" {
+  description = "Mail from address for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "formbricks_smtp_host" {
+  description = "SMTP host for Formbricks"
+  type        = string
+  default     = "smtp.zoho.com"
+}
+
+variable "formbricks_smtp_port" {
+  description = "SMTP port for Formbricks"
+  type        = number
+  default     = 465
+}
+
+variable "formbricks_smtp_user" {
+  description = "SMTP username for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "formbricks_smtp_password" {
   description = "SMTP password for Formbricks"
   type        = string

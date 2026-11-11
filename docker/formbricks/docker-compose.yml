@@ -61,10 +61,10 @@ services:
       CUBEJS_API_SECRET: ${CUBEJS_API_SECRET}
       CUBEJS_JWT_ISSUER: formbricks-web
       CUBEJS_JWT_AUDIENCE: formbricks-cube
-      MAIL_FROM: forms@emil64.cc
-      SMTP_HOST: smtp.zoho.com
-      SMTP_PORT: 465
-      SMTP_USER: forms@emil64.cc
+      MAIL_FROM: ${MAIL_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       SMTP_SECURE_ENABLED: 1
       EMAIL_VERIFICATION_DISABLED: 1
