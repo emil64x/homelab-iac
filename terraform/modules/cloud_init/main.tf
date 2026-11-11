@@ -46,7 +46,8 @@ data "template_file" "cloud_init" {
     portainer_script      = data.template_file.portainer_script.rendered
     vm_name               = var.vm_name
     shared_storage_folder = var.shared_storage_folder
-
+    portainer_password    = var.portainer_admin_password
+    
     shared_storage_mountpoint = var.shared_storage_mountpoint
   }
 }

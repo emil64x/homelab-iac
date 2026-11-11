@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --schedule "0 0 5 * * *"
+    command: --schedule "0 0 5 * * *" --cleanup
     environment:
       WATCHTOWER_NOTIFICATIONS: shoutrrr
       WATCHTOWER_NOTIFICATION_URL: ${SHOUTRRR_URL}

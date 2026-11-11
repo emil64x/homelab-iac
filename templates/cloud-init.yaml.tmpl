@@ -8,7 +8,10 @@ packages:
   - net-tools
   - curl
   - jq
-
+  - apt-transport-https
+  - ca-certificates
+  - gnupg
+  - lsb-release
 users:
   - default
   - name: ubuntu
@@ -17,18 +20,18 @@ users:
     ssh_authorized_keys:
       - ${ssh_pub_key}
     sudo: ALL=(ALL) NOPASSWD:ALL
-
 mounts:
   - [ "/dev/sda", "${shared_storage_mountpoint}", "ext4", "defaults", "0", "2" ]
-
 write_files:
-
   ${indent(2, rendered_stacks)}
+  - path: /opt/portainer/admin_password_plain
+    permissions: '0755'
+    content: |
+      ${portainer_password}
   - path: /opt/bootstrap-portainer.sh
     permissions: '0755'
     content: |
       ${indent(6, portainer_script)}
-
 runcmd:
   - systemctl enable qemu-guest-agent
   - systemctl start qemu-guest-agent
@@ -38,7 +41,7 @@ runcmd:
           echo "Waiting for /dev/sda..." && sleep 10
         done
         fsck -f -y /dev/sda || true
-        mkdir "${shared_storage_mountpoint}"
+        mkdir -p "${shared_storage_mountpoint}"
         mount /dev/sda "${shared_storage_mountpoint}"
         TARGET_DIR="${shared_storage_mountpoint}/${shared_storage_folder}"
         if [ ! -d "$TARGET_DIR" ]; then
@@ -49,9 +52,20 @@ runcmd:
         fi
         sudo chown 1001:1001 "$TARGET_DIR"
         sudo chmod 755 "$TARGET_DIR"
-  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-  - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-  - apt update -y && apt upgrade -y
-  - apt install docker.io docker-compose -y
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - |
+        echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - apt-get update -y
+  - DEBIAN_FRONTEND=noninteractive apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  - systemctl enable docker
+  - systemctl start docker
   - bash /opt/bootstrap-portainer.sh
   - echo "done" > /tmp/cloud-config.done
+power_state:
+  mode: reboot
+  condition: test -f /var/run/reboot-required
+  timeout: 30
