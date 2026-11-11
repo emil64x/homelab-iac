@@ -35,3 +35,10 @@ kubeconfig
 
 terraform/modules/cloud_init/ssh_keys/id_rsa.pub
 **/id_rsa.pub
+
+# Service configs containing secrets / API keys
+docker/homepage/config/
+**/homepage/config/
+docker/grafana/
+**/grafana/config/
+*grafana*.ini
