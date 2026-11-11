@@ -44,6 +44,12 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm" {
   agent {
     enabled = true
   }
+
+  lifecycle {
+    ignore_changes = [
+      initialization[0].user_data_file_id,
+    ]
+  }
 }
 
 resource "null_resource" "attach_disk" {
@@ -54,7 +60,8 @@ resource "null_resource" "attach_disk" {
   }
 
   triggers = {
-    always_run = timestamp()
+    vm_id = proxmox_virtual_environment_vm.ubuntu_vm[0].id
+    disk  = var.persistent_disk_path
   }
 }
 
@@ -64,7 +71,7 @@ resource "null_resource" "add_ssh_known_host" {
   provisioner "local-exec" {
     command = <<-EOT
       set -e
-      IP=${proxmox_virtual_environment_vm.ubuntu_vm[0].ipv4_addresses[1][0]}
+      IP=${split("/", var.static_ip)[0]}
       ssh-keygen -R "$IP" 2>/dev/null || true
       sed -i.bak "/^# $IP:22/d" ~/.ssh/known_hosts
       ssh-keyscan -H "$IP" 2>/dev/null >> ~/.ssh/known_hosts || echo "Warning: ssh-keyscan failed for $IP"
@@ -74,7 +81,7 @@ resource "null_resource" "add_ssh_known_host" {
   }
 
   triggers = {
-    always_run = timestamp()
+    vm_id = proxmox_virtual_environment_vm.ubuntu_vm[0].id
   }
 }
 
