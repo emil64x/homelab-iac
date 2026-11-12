@@ -75,6 +75,7 @@ services:
       OIDC_DISPLAY_NAME: Authentik
       OIDC_SIGNING_ALGORITHM: RS256
       AUTH_SKIP_INVITE_FOR_SSO: "1"
+      ENTERPRISE_LICENSE_KEY: ${ENTERPRISE_LICENSE_KEY:-homelab}
 
   hub-migrate:
     image: ghcr.io/formbricks/hub:latest
