@@ -10,7 +10,6 @@ services:
       - ${STORAGE}/hedgedoc/database:/var/lib/postgresql/data
     restart: always
   app:
-    # Make sure to use the latest release from https://hedgedoc.org/latest-release
     image: quay.io/hedgedoc/hedgedoc:1.10.5
     environment:
       - CMD_DB_URL=postgres://hedgedoc:password@database:5432/hedgedoc
@@ -18,6 +17,16 @@ services:
       - CMD_PROTOCOL_USESSL=true
       - CMD_URL_ADDPORT=false
       - CMD_ALLOW_ORIGIN=['${HEDGEDOC_DOMAIN}']
+      - CMD_OAUTH2_USER_PROFILE_URL=https://auth-e2.emil64.cc/application/o/userinfo/
+      - CMD_OAUTH2_AUTHORIZATION_URL=https://auth-e2.emil64.cc/application/o/authorize/
+      - CMD_OAUTH2_TOKEN_URL=https://auth-e2.emil64.cc/application/o/token/
+      - CMD_OAUTH2_CLIENT_ID=${HEDGEDOC_OIDC_CLIENT_ID:-f718cd049d503acc74922778d4565013}
+      - CMD_OAUTH2_CLIENT_SECRET=${HEDGEDOC_OIDC_CLIENT_SECRET:-gtiM0LXiEvyRP_0RUm2y4X0w0AFYc7EZair1GsBGFa0}
+      - CMD_OAUTH2_PROVIDERNAME=Authentik
+      - CMD_OAUTH2_SCOPE=openid email profile
+      - CMD_OAUTH2_USER_PROFILE_ID_ATTR=sub
+      - CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR=preferred_username
+      - CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR=name
     volumes:
       - ${STORAGE}/hedgedoc/uploads:/hedgedoc/public/uploads
     ports:
