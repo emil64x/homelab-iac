@@ -27,6 +27,7 @@ services:
       - CMD_OAUTH2_USER_PROFILE_ID_ATTR=sub
       - CMD_OAUTH2_USER_PROFILE_USERNAME_ATTR=preferred_username
       - CMD_OAUTH2_USER_PROFILE_DISPLAY_NAME_ATTR=name
+      - CMD_OAUTH2_USER_PROFILE_EMAIL_ATTR=email
     volumes:
       - ${STORAGE}/hedgedoc/uploads:/hedgedoc/public/uploads
     ports:
