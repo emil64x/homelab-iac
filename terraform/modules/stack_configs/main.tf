@@ -257,7 +257,7 @@ locals {
       }
       dns = [
         {
-          local_url  = "http://172.17.0.1:3200"
+          local_url  = "http://172.17.0.1:9010"
           dns_prefix = "home-${var.dns_prefix}"
         }
       ]
