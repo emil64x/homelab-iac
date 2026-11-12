@@ -31,6 +31,20 @@ services:
       retries: 30
       start_period: 10s
 
+  redis-license-seed:
+    image: valkey/valkey@sha256:12ba4f45a7c3e1d0f076acd616cb230834e75a77e8516dde382720af32832d6d
+    restart: "no"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    depends_on:
+      redis:
+        condition: service_healthy
+    entrypoint: ["sh", "-c"]
+    command:
+      [
+        'valkey-cli -h redis set fb:license:8be0b5445fca6eb16d14c6f4eaff1cf1d1a3362ef660bfb2b66e74bf309b7e61:status ''{"value":{"status":"active","features":{"isMultiOrgEnabled":true,"workspaces":null,"twoFactorAuth":true,"sso":true,"whitelabel":true,"removeBranding":true,"contacts":true,"aiSmartTools":true,"saml":true,"spamProtection":true,"auditLogs":true,"accessControl":true,"quotas":true,"feedbackDirectories":true,"dashboards":true,"workflows":true}}}'' && valkey-cli -h redis set fb:license:8be0b5445fca6eb16d14c6f4eaff1cf1d1a3362ef660bfb2b66e74bf309b7e61:previous_result ''{"active":true,"features":{"isMultiOrgEnabled":true,"workspaces":null,"twoFactorAuth":true,"sso":true,"whitelabel":true,"removeBranding":true,"contacts":true,"aiSmartTools":true,"saml":true,"spamProtection":true,"auditLogs":true,"accessControl":true,"quotas":true,"feedbackDirectories":true,"dashboards":true,"workflows":true},"lastChecked":"2026-11-12T12:00:00.000Z"}'' && echo "Formbricks license successfully seeded into Redis"'
+      ]
+
   formbricks:
     restart: always
     image: ghcr.io/formbricks/formbricks:5.4.9
@@ -41,6 +55,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      redis-license-seed:
+        condition: service_completed_successfully
       cube:
         condition: service_healthy
     ports:
