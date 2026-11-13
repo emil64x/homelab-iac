@@ -277,6 +277,20 @@ variable "formbricks_smtp_password" {
   default     = ""
 }
 
+variable "formbricks_authzed_token" {
+  description = "AuthZed / SpiceDB preshared key for Formbricks"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "formbricks_authzed_database_password" {
+  description = "Database password for Formbricks SpiceDB datastore"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "authentik_secret_key" {
   description = "Secret key for Authentik"
   type        = string

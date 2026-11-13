@@ -303,6 +303,8 @@ locals {
         FORMBRICKS_OIDC_CLIENT_ID     = var.formbricks_oidc_client_id
         FORMBRICKS_OIDC_CLIENT_SECRET = var.formbricks_oidc_client_secret
         FORMBRICKS_OIDC_ISSUER        = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/formbricks/"
+        AUTHZED_TOKEN                 = var.formbricks_authzed_token
+        AUTHZED_DATABASE_PASSWORD     = var.formbricks_authzed_database_password
       }
       dns = [
         {

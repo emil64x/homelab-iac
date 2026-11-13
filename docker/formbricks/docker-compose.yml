@@ -2,6 +2,7 @@ services:
   postgres:
     restart: always
     image: pgvector/pgvector:pg18
+    shm_size: 512mb
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     volumes:
@@ -18,7 +19,7 @@ services:
 
   redis:
     restart: always
-    image: valkey/valkey@sha256:12ba4f45a7c3e1d0f076acd616cb230834e75a77e8516dde382720af32832d6d
+    image: valkey/valkey@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     command: valkey-server --appendonly yes --maxmemory-policy noeviction
@@ -32,7 +33,7 @@ services:
       start_period: 10s
 
   redis-license-seed:
-    image: valkey/valkey@sha256:12ba4f45a7c3e1d0f076acd616cb230834e75a77e8516dde382720af32832d6d
+    image: valkey/valkey@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd
     restart: "no"
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
@@ -45,9 +46,147 @@ services:
         'until valkey-cli -h redis ping > /dev/null 2>&1; do sleep 1; done && valkey-cli -h redis set fb:license:8be0b5445fca6eb16d14c6f4eaff1cf1d1a3362ef660bfb2b66e74bf309b7e61:status ''{"value":{"status":"active","features":{"isMultiOrgEnabled":true,"workspaces":null,"twoFactorAuth":true,"sso":true,"whitelabel":true,"removeBranding":true,"contacts":true,"aiSmartTools":true,"saml":true,"spamProtection":true,"auditLogs":true,"accessControl":true,"quotas":true,"feedbackDirectories":true,"dashboards":true,"workflows":true}}}'' && valkey-cli -h redis set fb:license:8be0b5445fca6eb16d14c6f4eaff1cf1d1a3362ef660bfb2b66e74bf309b7e61:previous_result ''{"active":true,"features":{"isMultiOrgEnabled":true,"workspaces":null,"twoFactorAuth":true,"sso":true,"whitelabel":true,"removeBranding":true,"contacts":true,"aiSmartTools":true,"saml":true,"spamProtection":true,"auditLogs":true,"accessControl":true,"quotas":true,"feedbackDirectories":true,"dashboards":true,"workflows":true},"lastChecked":"2026-11-12T12:00:00.000Z"}'' && echo "Formbricks license successfully seeded into Redis"'
       ]
 
+  authzed-db-bootstrap:
+    image: pgvector/pgvector:pg18
+    restart: "no"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    entrypoint:
+      - /bin/sh
+      - -ec
+      - |
+        if [ -z "$$AUTHZED_DATABASE_PASSWORD" ]; then
+          echo "AUTHZED_DATABASE_PASSWORD is required for bundled SpiceDB." >&2
+          exit 1
+        fi
+        psql "$$POSTGRES_ADMIN_URL" \
+          --set=ON_ERROR_STOP=1 \
+          --set=database_name="spicedb" \
+          --set=database_username="spicedb" \
+          --set=database_password="$$AUTHZED_DATABASE_PASSWORD" <<'SQL'
+        SELECT format('CREATE ROLE %I LOGIN PASSWORD %L', :'database_username', :'database_password')
+        WHERE NOT EXISTS (
+          SELECT 1 FROM pg_roles WHERE rolname = :'database_username'
+        ) \gexec
+
+        SELECT format('ALTER ROLE %I WITH LOGIN PASSWORD %L', :'database_username', :'database_password') \gexec
+
+        SELECT format('CREATE DATABASE %I OWNER %I', :'database_name', :'database_username')
+        WHERE NOT EXISTS (
+          SELECT 1 FROM pg_database WHERE datname = :'database_name'
+        ) \gexec
+
+        SELECT format('ALTER DATABASE %I OWNER TO %I', :'database_name', :'database_username') \gexec
+        SQL
+        echo "AuthZed database bootstrap completed."
+    environment:
+      POSTGRES_ADMIN_URL: postgresql://postgres:postgres@postgres:5432/postgres?sslmode=disable
+      AUTHZED_DATABASE_PASSWORD: ${AUTHZED_DATABASE_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  spicedb-migrate:
+    image: authzed/spicedb:v1.57.0
+    restart: "no"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    command: datastore migrate head
+    environment:
+      SPICEDB_DATASTORE_ENGINE: postgres
+      SPICEDB_DATASTORE_CONN_URI: postgresql://spicedb:${AUTHZED_DATABASE_PASSWORD}@postgres:5432/spicedb?sslmode=disable
+    depends_on:
+      authzed-db-bootstrap:
+        condition: service_completed_successfully
+
+  spicedb:
+    image: authzed/spicedb:v1.57.0
+    restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    command: serve
+    mem_limit: 512m
+    environment:
+      SPICEDB_DATASTORE_ENGINE: postgres
+      SPICEDB_DATASTORE_CONN_URI: postgresql://spicedb:${AUTHZED_DATABASE_PASSWORD}@postgres:5432/spicedb?sslmode=disable
+      SPICEDB_GRPC_PRESHARED_KEY: ${AUTHZED_TOKEN}
+      SPICEDB_LOG_FORMAT: json
+      SPICEDB_LOG_LEVEL: info
+      SPICEDB_TELEMETRY_ENDPOINT: ""
+    depends_on:
+      spicedb-migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/grpc_health_probe", "-addr=localhost:50051"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  formbricks-migrate:
+    image: ghcr.io/formbricks/formbricks:6.2.0
+    restart: "no"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    command:
+      [
+        "node /home/nextjs/validate-env.mjs && if command -v timeout >/dev/null 2>&1; then timeout 300 node packages/database/dist/scripts/apply-migrations.js; else node packages/database/dist/scripts/apply-migrations.js; fi",
+      ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      WEBAPP_URL: ${WEBAPP_URL}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      BETTER_AUTH_URL: ${WEBAPP_URL}
+      BETTER_AUTH_SECRET: ${NEXTAUTH_SECRET}
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/formbricks?schema=public"
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      CRON_SECRET: ${CRON_SECRET}
+      REDIS_URL: "redis://redis:6379"
+      HUB_API_KEY: ${HUB_API_KEY}
+      HUB_API_URL: "http://hub:8080"
+      CUBEJS_API_URL: "http://cube:4000"
+      CUBEJS_API_SECRET: ${CUBEJS_API_SECRET}
+      AUTHZED_ENABLED: "true"
+      AUTHZED_ENDPOINT: spicedb:50051
+      AUTHZED_TOKEN: ${AUTHZED_TOKEN}
+      AUTHZED_SYSTEM_KEY: formbricks
+      AUTHZED_INSECURE: "true"
+      AUTHZED_CONSISTENCY: fully_consistent
+
+  authzed-initialize:
+    image: ghcr.io/formbricks/formbricks:6.2.0
+    restart: "no"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    entrypoint: ["formbricks-authzed"]
+    command: ["upgrade", "prepare"]
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/formbricks?schema=public"
+      ENCRYPTION_KEY: authzed-initialize-unused
+      CUBEJS_API_SECRET: authzed-initialize-unused
+      CUBEJS_API_URL: http://localhost
+      HUB_API_KEY: authzed-initialize-unused
+      HUB_API_URL: http://localhost
+      REDIS_URL: redis://localhost
+      LOG_LEVEL: fatal
+      AUTHZED_ENABLED: "true"
+      AUTHZED_ENDPOINT: spicedb:50051
+      AUTHZED_TOKEN: ${AUTHZED_TOKEN}
+      AUTHZED_SYSTEM_KEY: formbricks
+      AUTHZED_INSECURE: "true"
+      AUTHZED_CONSISTENCY: fully_consistent
+    depends_on:
+      formbricks-migrate:
+        condition: service_completed_successfully
+      spicedb:
+        condition: service_healthy
+
   formbricks:
     restart: always
-    image: ghcr.io/formbricks/formbricks:5.4.9
+    image: ghcr.io/formbricks/formbricks:6.2.0
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
     depends_on:
@@ -59,6 +198,10 @@ services:
         condition: service_completed_successfully
       cube:
         condition: service_healthy
+      spicedb:
+        condition: service_healthy
+      authzed-initialize:
+        condition: service_completed_successfully
     ports:
       - "3233:3000"
     volumes:
@@ -66,6 +209,8 @@ services:
     environment:
       WEBAPP_URL: ${WEBAPP_URL}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
+      BETTER_AUTH_URL: ${WEBAPP_URL}
+      BETTER_AUTH_SECRET: ${NEXTAUTH_SECRET}
       DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/formbricks?schema=public"
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
@@ -77,6 +222,14 @@ services:
       CUBEJS_API_SECRET: ${CUBEJS_API_SECRET}
       CUBEJS_JWT_ISSUER: formbricks-web
       CUBEJS_JWT_AUDIENCE: formbricks-cube
+      SKIP_STARTUP_MIGRATION: "true"
+      FORMBRICKS_AUTHZED_V6_MIGRATION_ACKNOWLEDGED: "true"
+      AUTHZED_ENABLED: "true"
+      AUTHZED_ENDPOINT: spicedb:50051
+      AUTHZED_TOKEN: ${AUTHZED_TOKEN}
+      AUTHZED_SYSTEM_KEY: formbricks
+      AUTHZED_INSECURE: "true"
+      AUTHZED_CONSISTENCY: fully_consistent
       MAIL_FROM: ${MAIL_FROM}
       SMTP_HOST: ${SMTP_HOST}
       SMTP_PORT: ${SMTP_PORT}
@@ -93,9 +246,37 @@ services:
       AUTH_SKIP_INVITE_FOR_SSO: "1"
       ENTERPRISE_LICENSE_KEY: ${ENTERPRISE_LICENSE_KEY:-homelab}
 
+  authzed-ops:
+    profiles: ["authzed-ops"]
+    image: ghcr.io/formbricks/formbricks:6.2.0
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/formbricks?schema=public"
+      ENCRYPTION_KEY: authzed-ops-unused
+      CUBEJS_API_SECRET: authzed-ops-unused
+      CUBEJS_API_URL: http://localhost
+      HUB_API_KEY: authzed-ops-unused
+      HUB_API_URL: http://localhost
+      REDIS_URL: redis://localhost
+      LOG_LEVEL: fatal
+      AUTHZED_ENABLED: "true"
+      AUTHZED_ENDPOINT: spicedb:50051
+      AUTHZED_TOKEN: ${AUTHZED_TOKEN}
+      AUTHZED_SYSTEM_KEY: formbricks
+      AUTHZED_INSECURE: "true"
+      AUTHZED_CONSISTENCY: fully_consistent
+    depends_on:
+      postgres:
+        condition: service_healthy
+      spicedb:
+        condition: service_healthy
+
   hub-migrate:
-    image: ghcr.io/formbricks/hub:latest
+    image: ghcr.io/formbricks/hub:0.14.3
     restart: "no"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
     entrypoint: ["sh", "-c"]
     command:
       [
@@ -109,7 +290,9 @@ services:
 
   hub:
     restart: always
-    image: ghcr.io/formbricks/hub:latest
+    image: ghcr.io/formbricks/hub:0.14.3
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
     depends_on:
       hub-migrate:
         condition: service_completed_successfully
@@ -119,9 +302,27 @@ services:
       API_KEY: ${HUB_API_KEY}
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/formbricks?sslmode=disable
 
+  hub-worker:
+    restart: always
+    image: ghcr.io/formbricks/hub:0.14.3
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+    depends_on:
+      hub-migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/app/hub-worker"]
+    healthcheck:
+      disable: true
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/formbricks?sslmode=disable
+
   cube:
     restart: always
-    image: cubejs/cube:v1.6.6
+    image: ghcr.io/formbricks/cube:1.8.8-3
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
     depends_on:
       hub-migrate:
         condition: service_completed_successfully
@@ -138,7 +339,9 @@ services:
       CUBEJS_JWT_ISSUER: formbricks-web
       CUBEJS_JWT_AUDIENCE: formbricks-cube
       CUBEJS_DEFAULT_API_SCOPES: meta,data
+      CUBEJS_EXTERNAL_DEFAULT: "false"
       CUBEJS_CACHE_AND_QUEUE_DRIVER: memory
+      CUBEJS_DB_QUERY_TIMEOUT: 60s
     volumes:
       - ${STORAGE}/formbricks/cube/cube.js:/cube/conf/cube.js:ro
       - ${STORAGE}/formbricks/cube/schema:/cube/conf/model:ro
