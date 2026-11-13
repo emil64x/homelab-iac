@@ -35,6 +35,13 @@ services:
       DATABASE_URL: jdbc:postgresql://database:5432/traccar
       DATABASE_USER: traccar
       DATABASE_PASSWORD: traccar
+      WEB_URL: https://traccar-e2.emil64.cc
+      OPENID_CLIENT_ID: ${TRACCAR_OPENID_CLIENT_ID:-3a6995218fc00f7ebc450982fc705dc6}
+      OPENID_CLIENT_SECRET: ${TRACCAR_OPENID_CLIENT_SECRET:-9lT_Swbfpg7orWN_947mAr3Qq8BCY2xZY01Pryskt3E}
+      OPENID_ISSUER_URL: https://auth-e2.emil64.cc/application/o/traccar/
+      OPENID_FORCE: "false"
+      OPENID_ALLOW_REGISTRATION: "true"
+      OPENID_ADMIN_GROUP: role-admin
     healthcheck:
       test: [ "CMD", "wget", "-q", "--spider", "http://localhost:8082/api/health" ]
       interval: 2m
