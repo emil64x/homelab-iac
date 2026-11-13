@@ -186,6 +186,8 @@ module "stack_configs" {
   formbricks_smtp_port         = var.formbricks_smtp_port
   formbricks_smtp_user         = var.formbricks_smtp_user
   formbricks_smtp_password     = var.formbricks_smtp_password
+  formbricks_authzed_token     = var.formbricks_authzed_token
+  formbricks_authzed_database_password = var.formbricks_authzed_database_password
 
   authentik_secret_key = var.authentik_secret_key
   authentik_pg_pass    = var.authentik_pg_pass
