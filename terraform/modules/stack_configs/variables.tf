@@ -41,7 +41,6 @@ variable "claper_oidc_client_secret" {
   description = "OIDC client secret for Claper"
   type        = string
   sensitive   = true
-  default     = "fxCaGhSr31sr6PgtWC6xq2YYyrMki3bBeVIc5v1KybkMNj5yMQlKJrdocBbCWS5o"
 }
 
 variable "vw_pg_user" {

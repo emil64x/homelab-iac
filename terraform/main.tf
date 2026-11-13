@@ -28,7 +28,7 @@ module "ubuntu_vm" {
 
   enabled_stacks = var.enabled_stacks
 
-  shlink_api_key         = var.shlink_api_key
+  shlink_api_key            = var.shlink_api_key
   claper_secret_key_base    = var.claper_secret_key_base
   claper_oidc_client_secret = var.claper_oidc_client_secret
 
