@@ -305,20 +305,11 @@ locals {
         FORMBRICKS_OIDC_ISSUER        = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/formbricks/"
         AUTHZED_TOKEN                 = var.formbricks_authzed_token
         AUTHZED_DATABASE_PASSWORD     = var.formbricks_authzed_database_password
-        FORMBRICKS_RUSTFS_ADMIN_USER       = "formbricks-root"
-        FORMBRICKS_RUSTFS_ADMIN_PASSWORD   = var.formbricks_rustfs_admin_password
-        FORMBRICKS_RUSTFS_SERVICE_USER     = "formbricks-service"
-        FORMBRICKS_RUSTFS_SERVICE_PASSWORD = var.formbricks_rustfs_service_password
-        S3_ENDPOINT_URL                    = "https://files-${var.dns_prefix}.${var.dns_suffix}"
       }
       dns = [
         {
           local_url  = "http://172.17.0.1:3233"
           dns_prefix = "forms-${var.dns_prefix}"
-        },
-        {
-          local_url  = "http://172.17.0.1:9005"
-          dns_prefix = "files-${var.dns_prefix}"
         }
       ]
     }

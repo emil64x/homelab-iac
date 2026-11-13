@@ -291,20 +291,6 @@ variable "formbricks_authzed_database_password" {
   default     = ""
 }
 
-variable "formbricks_rustfs_admin_password" {
-  description = "Admin password for Formbricks RustFS storage"
-  type        = string
-  sensitive   = true
-  default     = ""
-}
-
-variable "formbricks_rustfs_service_password" {
-  description = "Service user password for Formbricks RustFS storage"
-  type        = string
-  sensitive   = true
-  default     = ""
-}
-
 variable "authentik_secret_key" {
   description = "Secret key for Authentik"
   type        = string
