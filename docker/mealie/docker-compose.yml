@@ -28,9 +28,9 @@ services:
       # OIDC Settings
       OIDC_AUTH_ENABLED: "true"
       OIDC_SIGNUP_ENABLED: "true"
-      OIDC_CONFIGURATION_URL: "https://auth-e2.emil64.cc/application/o/mealie/.well-known/openid-configuration"
-      OIDC_CLIENT_ID: ${MEALIE_OIDC_CLIENT_ID:-f3eeed94b5298e932b4586c129b76b78}
-      OIDC_CLIENT_SECRET: ${MEALIE_OIDC_CLIENT_SECRET:-IRuUtAyFaditLzHjlJIkIPS5yT_yji-S9hQaz7TEI_w}
+      OIDC_CONFIGURATION_URL: ${MEALIE_OIDC_CONFIGURATION_URL}
+      OIDC_CLIENT_ID: ${MEALIE_OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${MEALIE_OIDC_CLIENT_SECRET}
       OIDC_PROVIDER_NAME: "Authentik"
       OIDC_AUTO_REDIRECT: "false"
       OIDC_ADMIN_GROUP: "role-admin"

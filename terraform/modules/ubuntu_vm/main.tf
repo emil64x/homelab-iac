@@ -136,6 +136,21 @@ module "stack_configs" {
   claper_secret_key_base    = var.claper_secret_key_base
   claper_oidc_client_secret = var.claper_oidc_client_secret
 
+  actual_budget_oidc_client_id     = var.actual_budget_oidc_client_id
+  actual_budget_oidc_client_secret = var.actual_budget_oidc_client_secret
+
+  traccar_oidc_client_id     = var.traccar_oidc_client_id
+  traccar_oidc_client_secret = var.traccar_oidc_client_secret
+
+  mealie_oidc_client_id     = var.mealie_oidc_client_id
+  mealie_oidc_client_secret = var.mealie_oidc_client_secret
+
+  hedgedoc_oidc_client_id     = var.hedgedoc_oidc_client_id
+  hedgedoc_oidc_client_secret = var.hedgedoc_oidc_client_secret
+
+  formbricks_oidc_client_id     = var.formbricks_oidc_client_id
+  formbricks_oidc_client_secret = var.formbricks_oidc_client_secret
+
   vw_admin_token             = var.vw_admin_token
   vw_pg_master_host          = var.vw_pg_master_host
   vw_pg_master_port_number   = var.vw_pg_master_port_number

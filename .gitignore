@@ -42,3 +42,4 @@ docker/homepage/config/
 docker/grafana/
 **/grafana/config/
 *grafana*.ini
+docker/whatsapp-bridge/store/

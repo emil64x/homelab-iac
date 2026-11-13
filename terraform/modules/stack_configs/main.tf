@@ -28,7 +28,11 @@ locals {
       path     = "docker/traccar/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        STORAGE                      = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        TRACCAR_WEB_URL              = "https://traccar-${var.dns_prefix}.${var.dns_suffix}"
+        TRACCAR_OPENID_CLIENT_ID     = var.traccar_oidc_client_id
+        TRACCAR_OPENID_CLIENT_SECRET = var.traccar_oidc_client_secret
+        TRACCAR_OPENID_ISSUER_URL    = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/traccar/"
       }
       dns = [
         {
@@ -146,9 +150,14 @@ locals {
       path     = "docker/hedgedoc/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
-        HEDGEDOC_DOMAIN   = "hedgedoc-${var.dns_prefix}.${var.dns_suffix}"
-        HEDGEDOC_PORT     = "34409"
+        STORAGE                           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        HEDGEDOC_DOMAIN                   = "hedgedoc-${var.dns_prefix}.${var.dns_suffix}"
+        HEDGEDOC_PORT                     = "34409"
+        HEDGEDOC_OAUTH2_USER_PROFILE_URL  = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/userinfo/"
+        HEDGEDOC_OAUTH2_AUTHORIZATION_URL = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/authorize/"
+        HEDGEDOC_OAUTH2_TOKEN_URL         = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/token/"
+        HEDGEDOC_OIDC_CLIENT_ID           = var.hedgedoc_oidc_client_id
+        HEDGEDOC_OIDC_CLIENT_SECRET       = var.hedgedoc_oidc_client_secret
       }
       dns = [
         {
@@ -180,8 +189,11 @@ locals {
       path     = "docker/mealie/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        STORAGE           = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
-        MEALIE_DNS        = "https://mealie-${var.dns_prefix}.${var.dns_suffix}"
+        STORAGE                       = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        MEALIE_DNS                    = "https://mealie-${var.dns_prefix}.${var.dns_suffix}"
+        MEALIE_OIDC_CONFIGURATION_URL = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/mealie/.well-known/openid-configuration"
+        MEALIE_OIDC_CLIENT_ID         = var.mealie_oidc_client_id
+        MEALIE_OIDC_CLIENT_SECRET     = var.mealie_oidc_client_secret
       }
       dns = [
         {
@@ -227,7 +239,11 @@ locals {
       path     = "docker/actual-budget/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        STORAGE                       = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        ACTUAL_OPENID_DISCOVERY_URL   = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/actual-budget/.well-known/openid-configuration"
+        ACTUAL_OPENID_CLIENT_ID       = var.actual_budget_oidc_client_id
+        ACTUAL_OPENID_CLIENT_SECRET   = var.actual_budget_oidc_client_secret
+        ACTUAL_OPENID_SERVER_HOSTNAME = "https://actual-${var.dns_prefix}.${var.dns_suffix}"
       }
       dns = [
         {
@@ -284,6 +300,9 @@ locals {
         SMTP_PORT         = tostring(var.formbricks_smtp_port)
         SMTP_USER         = var.formbricks_smtp_user
         SMTP_PASSWORD     = var.formbricks_smtp_password
+        FORMBRICKS_OIDC_CLIENT_ID     = var.formbricks_oidc_client_id
+        FORMBRICKS_OIDC_CLIENT_SECRET = var.formbricks_oidc_client_secret
+        FORMBRICKS_OIDC_ISSUER        = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/formbricks/"
       }
       dns = [
         {
@@ -308,6 +327,16 @@ locals {
           dns_prefix = "auth-${var.dns_prefix}"
         }
       ]
+    }
+
+    whatsapp-bridge = {
+      name     = "whatsapp-bridge"
+      path     = "docker/whatsapp-bridge/docker-compose.yml"
+      repo_url = "https://github.com/emil64x/homelab-iac.git"
+      env = {
+        STORAGE = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+      }
+      dns = []
     }
 
 

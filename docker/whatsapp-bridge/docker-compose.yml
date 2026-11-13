@@ -1,0 +1,17 @@
+services:
+  whatsapp-bridge:
+    build: .
+    container_name: whatsapp-bridge
+    restart: unless-stopped
+    ports:
+      - "3800:8080"
+    volumes:
+      - ${STORAGE}/whatsapp-bridge/store:/app/store
+    networks:
+      - default
+      - uptime-kuma_default
+
+networks:
+  default:
+  uptime-kuma_default:
+    external: true

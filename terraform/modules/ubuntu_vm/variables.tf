@@ -131,6 +131,61 @@ variable "claper_oidc_client_secret" {
   sensitive   = true
 }
 
+variable "actual_budget_oidc_client_id" {
+  description = "OIDC client ID for Actual Budget"
+  type        = string
+}
+
+variable "actual_budget_oidc_client_secret" {
+  description = "OIDC client secret for Actual Budget"
+  type        = string
+  sensitive   = true
+}
+
+variable "traccar_oidc_client_id" {
+  description = "OIDC client ID for Traccar"
+  type        = string
+}
+
+variable "traccar_oidc_client_secret" {
+  description = "OIDC client secret for Traccar"
+  type        = string
+  sensitive   = true
+}
+
+variable "mealie_oidc_client_id" {
+  description = "OIDC client ID for Mealie"
+  type        = string
+}
+
+variable "mealie_oidc_client_secret" {
+  description = "OIDC client secret for Mealie"
+  type        = string
+  sensitive   = true
+}
+
+variable "hedgedoc_oidc_client_id" {
+  description = "OIDC client ID for HedgeDoc"
+  type        = string
+}
+
+variable "hedgedoc_oidc_client_secret" {
+  description = "OIDC client secret for HedgeDoc"
+  type        = string
+  sensitive   = true
+}
+
+variable "formbricks_oidc_client_id" {
+  description = "OIDC client ID for Formbricks"
+  type        = string
+}
+
+variable "formbricks_oidc_client_secret" {
+  description = "OIDC client secret for Formbricks"
+  type        = string
+  sensitive   = true
+}
+
 variable "tags" {
   type    = list(string)
   default = ["iac"]
