@@ -43,6 +43,12 @@ services:
       - SECRET_KEY_BASE=${CLAPER_SECRET_KEY_BASE}
       - DATABASE_URL=postgres://claper:claper@db:5432/claper
       - ENABLE_ACCOUNT_CREATION=false
+      - OIDC_ISSUER=${CLAPER_OIDC_ISSUER:-https://auth-e2.emil64.cc/application/o/claper/}
+      - OIDC_CLIENT_ID=${CLAPER_OIDC_CLIENT_ID:-claper}
+      - OIDC_CLIENT_SECRET=${CLAPER_OIDC_CLIENT_SECRET:-fxCaGhSr31sr6PgtWC6xq2YYyrMki3bBeVIc5v1KybkMNj5yMQlKJrdocBbCWS5o}
+      - OIDC_SCOPES=openid email profile
+      - OIDC_PROVIDER_NAME=Authentik
+      - OIDC_TRUST_EMAIL_VERIFIED=true
     depends_on:
       db:
         condition: service_healthy

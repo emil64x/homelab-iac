@@ -63,9 +63,12 @@ locals {
       path     = "docker/claper/docker-compose.yml"
       repo_url = "https://github.com/emil64x/homelab-iac.git"
       env = {
-        STORAGE                = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
-        CLAPER_BASE_URL        = "https://claper-${var.dns_prefix}.${var.dns_suffix}"
-        CLAPER_SECRET_KEY_BASE = var.claper_secret_key_base
+        STORAGE                   = "${var.shared_storage_mountpoint}/${var.shared_storage_folder}"
+        CLAPER_BASE_URL           = "https://claper-${var.dns_prefix}.${var.dns_suffix}"
+        CLAPER_SECRET_KEY_BASE    = var.claper_secret_key_base
+        CLAPER_OIDC_CLIENT_ID     = "claper"
+        CLAPER_OIDC_CLIENT_SECRET = var.claper_oidc_client_secret
+        CLAPER_OIDC_ISSUER        = "https://auth-${var.dns_prefix}.${var.dns_suffix}/application/o/claper/"
       }
       dns = [
         {

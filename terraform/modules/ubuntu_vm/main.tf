@@ -134,6 +134,7 @@ module "stack_configs" {
   dns_suffix                = var.cloudflare_zone
   shlink_api_key            = var.shlink_api_key
   claper_secret_key_base    = var.claper_secret_key_base
+  claper_oidc_client_secret = var.claper_oidc_client_secret
 
   vw_admin_token             = var.vw_admin_token
   vw_pg_master_host          = var.vw_pg_master_host
