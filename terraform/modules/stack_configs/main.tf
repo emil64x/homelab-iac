@@ -52,7 +52,7 @@ locals {
           dns_prefix = "s"
         },
         {
-          local_url  = "http://172.17.0.1:3120"
+          local_url  = "http://172.17.0.1:9010"
           dns_prefix = "shlink"
         }
       ]
