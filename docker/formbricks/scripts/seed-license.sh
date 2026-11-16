@@ -16,7 +16,7 @@ PREV_KEY="fb:license:${HASH}:previous_result"
 
 STATUS_VAL='{"value":{"status":"active","features":{"isMultiOrgEnabled":true,"workspaces":null,"twoFactorAuth":true,"sso":true,"whitelabel":true,"removeBranding":true,"contacts":true,"aiSmartTools":true,"saml":true,"spamProtection":true,"auditLogs":true,"accessControl":true,"quotas":true,"feedbackDirectories":true,"dashboards":true,"workflows":true}}}'
 
-PREV_VAL='{"active":true,"features":{"isMultiOrgEnabled":true,"workspaces":null,"twoFactorAuth":true,"sso":true,"whitelabel":true,"removeBranding":true,"contacts":true,"aiSmartTools":true,"saml":true,"spamProtection":true,"auditLogs":true,"accessControl":true,"quotas":true,"feedbackDirectories":true,"dashboards":true,"workflows":true},"lastChecked":"2026-11-12T12:00:00.000Z"}'
+PREV_VAL='{"active":true,"features":{"isMultiOrgEnabled":true,"workspaces":null,"twoFactorAuth":true,"sso":true,"whitelabel":true,"removeBranding":true,"contacts":true,"aiSmartTools":true,"saml":true,"spamProtection":true,"auditLogs":true,"accessControl":true,"quotas":true,"feedbackDirectories":true,"dashboards":true,"workflows":true},"lastChecked":"2099-01-01T00:00:00.000Z"}'
 
 docker exec -i "$CONTAINER" redis-cli set "$STATUS_KEY" "$STATUS_VAL" > /dev/null
 docker exec -i "$CONTAINER" redis-cli set "$PREV_KEY" "$PREV_VAL" > /dev/null
