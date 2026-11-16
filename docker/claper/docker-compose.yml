@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:15
+    restart: unless-stopped
     ports:
       - 5433:5432
     volumes:
@@ -24,6 +25,7 @@ services:
       - claper-net
   app:
     image: ghcr.io/claperco/claper:latest # or build: .
+    restart: unless-stopped
     dns:
       - 8.8.8.8
       - 1.1.1.1
